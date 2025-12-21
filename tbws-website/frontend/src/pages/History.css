@@ -1,0 +1,550 @@
+/* ============================================
+   Premium History Page
+   ============================================ */
+   .history-page {
+    padding-top: 0;
+    background: #fafafa;
+    overflow-x: hidden;
+  }
+  
+  /* ============================================
+     Premium Hero Section
+     ============================================ */
+  .history-hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 8rem 0 6rem;
+  }
+  
+  .history-hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  
+  .hero-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+      #1e3a8a 0%, 
+      #2563eb 30%,
+      #3b82f6 60%,
+      #60a5fa 100%
+    );
+  }
+  
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 80px 80px, 100px 100px, 120px 120px, 90px 90px;
+    background-position: 0 0, 40px 40px, 80px 80px, 120px 120px;
+    animation: particlesFloat 20s linear infinite;
+  }
+  
+  @keyframes particlesFloat {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-100px);
+    }
+  }
+  
+  .history-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    color: white;
+  }
+  
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .history-hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+  }
+  
+  .title-highlight {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .history-hero-description {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+  }
+  
+  .hero-stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+  }
+  
+  .hero-stat {
+    text-align: center;
+  }
+  
+  .hero-stat-number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .hero-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+  }
+  
+  .hero-wave svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  /* ============================================
+     Timeline Section
+     ============================================ */
+  .timeline-section {
+    padding: 6rem 0;
+    background: white;
+    position: relative;
+  }
+  
+  .timeline-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 0;
+  }
+  
+  /* Timeline Center Line */
+  .timeline-center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    transform: translateX(-50%);
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  .timeline-line-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+      #ff6b35 0%,
+      #f7931e 25%,
+      #3b82f6 50%,
+      #f7931e 75%,
+      #ff6b35 100%
+    );
+    animation: lineGlow 3s ease-in-out infinite;
+  }
+  
+  @keyframes lineGlow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+  
+  /* ============================================
+     Timeline Cards
+     ============================================ */
+  .timeline-card {
+    position: relative;
+    width: calc(50% - 50px);
+    margin-bottom: 5rem;
+  }
+  
+  .timeline-left {
+    margin-right: auto;
+    text-align: right;
+  }
+  
+  .timeline-right {
+    margin-left: auto;
+    text-align: left;
+  }
+  
+  /* Year Badge */
+  .timeline-year-badge {
+    position: absolute;
+    top: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1.125rem;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    z-index: 10;
+  }
+  
+  .timeline-left .timeline-year-badge {
+    right: -80px;
+  }
+  
+  .timeline-right .timeline-year-badge {
+    left: -80px;
+  }
+  
+  .year-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Card Content */
+  .timeline-card-content {
+    position: relative;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+  }
+  
+  .timeline-card-content:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+    border-color: #ff6b35;
+  }
+  
+  .timeline-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  }
+  
+  .timeline-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .timeline-card-content:hover .timeline-image {
+    transform: scale(1.08);
+  }
+  
+  .timeline-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  .timeline-card-content:hover .timeline-image-overlay {
+    opacity: 1;
+  }
+  
+  .milestone-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+    color: #ff6b35;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .timeline-card-body {
+    padding: 2.5rem;
+  }
+  
+  .timeline-event-title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  
+  .timeline-event-description {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  /* Connector Line */
+  .timeline-connector {
+    position: absolute;
+    top: 20px;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6b35, #f7931e);
+    border-radius: 10px;
+  }
+  
+  .timeline-left .timeline-connector {
+    right: -50px;
+  }
+  
+  .timeline-right .timeline-connector {
+    left: -50px;
+  }
+  
+  /* Milestone Special Styling */
+  .timeline-milestone .timeline-card-content {
+    background: linear-gradient(135deg, 
+      rgba(255, 107, 53, 0.03) 0%, 
+      rgba(247, 147, 30, 0.03) 100%
+    );
+    border-color: #ff6b35;
+  }
+  
+  .timeline-milestone .timeline-event-title {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .timeline-milestone .timeline-year-badge {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    }
+    50% {
+      box-shadow: 0 10px 40px rgba(255, 107, 53, 0.6);
+    }
+  }
+  
+  /* ============================================
+     Empty State
+     ============================================ */
+  .empty-timeline {
+    text-align: center;
+    padding: 6rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .empty-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+  }
+  
+  .empty-timeline h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-timeline p {
+    font-size: 1.125rem;
+    color: #64748b;
+    line-height: 1.7;
+  }
+  
+  /* ============================================
+     Responsive Design
+     ============================================ */
+  @media (max-width: 1024px) {
+    .timeline-center-line {
+      left: 60px;
+    }
+  
+    .timeline-card {
+      width: calc(100% - 100px);
+      margin-left: 100px;
+      text-align: left;
+    }
+  
+    .timeline-left,
+    .timeline-right {
+      margin-left: 100px;
+      margin-right: 0;
+      text-align: left;
+    }
+  
+    .timeline-year-badge {
+      left: -90px !important;
+      right: auto !important;
+    }
+  
+    .timeline-connector {
+      left: -50px !important;
+      right: auto !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .history-hero {
+      padding: 6rem 0 4rem;
+      min-height: 60vh;
+    }
+  
+    .history-hero-title {
+      font-size: 3rem;
+    }
+  
+    .history-hero-description {
+      font-size: 1.125rem;
+    }
+  
+    .hero-stats-row {
+      gap: 2rem;
+    }
+  
+    .hero-stat-number {
+      font-size: 2rem;
+    }
+  
+    .timeline-section {
+      padding: 4rem 0;
+    }
+  
+    .timeline-center-line {
+      left: 30px;
+    }
+  
+    .timeline-card {
+      width: calc(100% - 70px);
+      margin-left: 70px;
+    }
+  
+    .timeline-left,
+    .timeline-right {
+      margin-left: 70px;
+    }
+  
+    .timeline-year-badge {
+      left: -60px !important;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+    }
+  
+    .timeline-image-wrapper {
+      height: 250px;
+    }
+  
+    .timeline-card-body {
+      padding: 2rem;
+    }
+  
+    .timeline-event-title {
+      font-size: 1.5rem;
+    }
+  
+    .timeline-event-description {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .history-hero-title {
+      font-size: 2.5rem;
+    }
+  
+    .hero-stats-row {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    .timeline-year-badge {
+      position: static;
+      margin-bottom: 1rem;
+    }
+  
+    .timeline-connector {
+      display: none;
+    }
+  
+    .timeline-card {
+      width: 100%;
+      margin-left: 0;
+    }
+  
+    .timeline-center-line {
+      display: none;
+    }
+  
+    .timeline-image-wrapper {
+      height: 220px;
+    }
+  
+    .timeline-card-body {
+      padding: 1.5rem;
+    }
+  
+    .timeline-event-title {
+      font-size: 1.375rem;
+    }
+  }

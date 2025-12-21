@@ -1,0 +1,436 @@
+/* ============================================
+   Hero Section
+   ============================================ */
+   .hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 8rem 0 4rem;
+  }
+  
+  /* Background */
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+      #1e3a8a 0%, 
+      #1e40af 25%, 
+      #2563eb 50%,
+      #3b82f6 75%,
+      #60a5fa 100%
+    );
+  }
+  
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+  }
+  
+  .hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+  }
+  
+  .hero-blob-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #ff6b35 0%, #f7931e 100%);
+    top: -200px;
+    right: -200px;
+  }
+  
+  .hero-blob-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #8b5cf6 0%, #ec4899 100%);
+    bottom: -150px;
+    left: -150px;
+  }
+  
+  /* Content */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  
+  /* Text Content */
+  .hero-text {
+    color: white;
+  }
+  
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  
+  .hero-title-highlight {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-description {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2.5rem;
+    max-width: 540px;
+  }
+  
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .hero-btn-primary,
+  .hero-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  .hero-btn-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+  }
+  
+  .hero-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+  }
+  
+  .hero-btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .hero-btn-outline:hover {
+    background: white;
+    color: #1e3a8a;
+    transform: translateY(-2px);
+  }
+  
+  /* Stats */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .hero-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .hero-stat-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+  }
+  
+  .hero-stat-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: white;
+    flex-shrink: 0;
+  }
+  
+  .hero-stat-content {
+    flex: 1;
+  }
+  
+  .hero-stat-number {
+    font-size: 1.75rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  
+  .hero-stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+  }
+  
+  /* Visual Content */
+  .hero-visual {
+    position: relative;
+  }
+  
+  .hero-image-wrapper {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 24px;
+  }
+  
+  .hero-image-decoration {
+    position: absolute;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    opacity: 0.2;
+  }
+  
+  .hero-decoration-1 {
+    width: 100%;
+    height: 100%;
+    top: -20px;
+    left: -20px;
+    z-index: -1;
+  }
+  
+  .hero-decoration-2 {
+    width: 80%;
+    height: 80%;
+    bottom: -30px;
+    right: -30px;
+    z-index: -2;
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  }
+  
+  /* Achievement Card */
+  .hero-achievement-card {
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    max-width: 280px;
+    transition: all 0.3s ease;
+  }
+  
+  .hero-achievement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  }
+  
+  .achievement-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    border-radius: 16px;
+    color: white;
+    flex-shrink: 0;
+  }
+  
+  .achievement-content {
+    flex: 1;
+  }
+  
+  .achievement-number {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  
+  .achievement-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  
+  .achievement-sparkle {
+    font-size: 1.5rem;
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+  
+  /* Scroll Indicator */
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 20;
+  }
+  
+  .scroll-mouse {
+    width: 28px;
+    height: 44px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+  }
+  
+  .scroll-wheel {
+    width: 4px;
+    height: 10px;
+    background: white;
+    border-radius: 10px;
+    animation: scroll 2s ease-in-out infinite;
+  }
+  
+  @keyframes scroll {
+    0% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.5; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .scroll-text {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  /* ============================================
+     Responsive Design
+     ============================================ */
+  @media (max-width: 1024px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  
+    .hero-title {
+      font-size: 3rem;
+    }
+  
+    .hero-visual {
+      order: -1;
+    }
+  
+    .hero-stats {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 6rem 0 3rem;
+    }
+  
+    .hero-title {
+      font-size: 2.5rem;
+    }
+  
+    .hero-description {
+      font-size: 1.125rem;
+    }
+  
+    .hero-stats {
+      grid-template-columns: 1fr;
+    }
+  
+    .hero-achievement-card {
+      position: static;
+      margin-top: 2rem;
+      max-width: 100%;
+    }
+  
+    .hero-actions {
+      flex-direction: column;
+    }
+  
+    .hero-btn-primary,
+    .hero-btn-outline {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+  
+    .hero-stat-card {
+      padding: 1rem;
+    }
+  
+    .hero-stat-icon {
+      width: 48px;
+      height: 48px;
+    }
+  
+    .hero-stat-number {
+      font-size: 1.5rem;
+    }
+  }

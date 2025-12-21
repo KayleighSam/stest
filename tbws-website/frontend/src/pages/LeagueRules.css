@@ -1,0 +1,233 @@
+/* ============================================
+   League Rules Page
+   ============================================ */
+   .league-rules-page {
+    min-height: 100vh;
+    background: #fafafa;
+  }
+  
+  /* Hero */
+  .rules-hero {
+    position: relative;
+    padding: 8rem 0 4rem;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    overflow: hidden;
+  }
+  
+  .rules-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.4;
+  }
+  
+  .rules-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    color: white;
+  }
+  
+  .rules-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .rules-hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  
+  .rules-hero-desc {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+  
+  /* Content */
+  .rules-content-section {
+    padding: 5rem 0;
+    background: white;
+  }
+  
+  .no-rules {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: #64748b;
+  }
+  
+  .no-rules svg {
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+  }
+  
+  .no-rules h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #334155;
+    margin-bottom: 0.5rem;
+  }
+  
+  .rules-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  
+  .rules-category-section {
+    background: white;
+  }
+  
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid #e2e8f0;
+  }
+  
+  .category-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 16px;
+    color: white;
+  }
+  
+  .category-title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+  }
+  
+  .rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .rule-item {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .rule-item:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    transform: translateX(8px);
+  }
+  
+  .rule-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 900;
+  }
+  
+  .rule-content {
+    flex: 1;
+  }
+  
+  .rule-title {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+  
+  .rule-text {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: #475569;
+  }
+  
+  .rule-text p {
+    margin-bottom: 1rem;
+  }
+  
+  .rule-text ul,
+  .rule-text ol {
+    margin: 1rem 0 1rem 1.5rem;
+  }
+  
+  .rule-text li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .rule-text strong {
+    font-weight: 700;
+    color: #0f172a;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .rules-hero-title {
+      font-size: 2.5rem;
+    }
+  
+    .category-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .category-title {
+      font-size: 1.75rem;
+    }
+  
+    .rule-item {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .rule-number {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .rules-hero-title {
+      font-size: 2rem;
+    }
+  
+    .category-title {
+      font-size: 1.5rem;
+    }
+  }

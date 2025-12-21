@@ -1,0 +1,25 @@
+Create About Page in Django Admin:
+
+Go to Pages → Add Page
+Title: "About Us"
+Slug: "about"
+Content: (Write your TBWS description here with rich formatting)
+Upload Featured Image
+Status: Published
+Save
+
+
+Fill Site Settings:
+
+Mission Title & Content
+Vision Title & Content
+Upload About Image
+
+
+Add Core Values:
+
+Go to Core Values → Add Core Value
+Title, Description, Icon (award, users, target, heart)
+Color Start & End (hex colors)
+Order
+Save
