@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Clock, ArrowRight, Zap, Users } from 'lucide-react';
+import { Calendar, MapPin, ArrowRight, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { contentAPI } from '../../api/content';
 import { formatDateTime, getImageUrl } from '../../utils/formatters';
@@ -18,152 +18,135 @@ const UpcomingEvents = () => {
 
   const upcomingEvents = data?.results || data?.data || data || [];
 
-  if (upcomingEvents.length === 0) return null;
+  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) return null;
 
   return (
-    <section className="upcoming-events-section">
-      <div className="container">
+    <section className="upcoming-events-premium">
+      <div className="events-bg-pattern"></div>
 
+      <div className="container">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="events-section-header"
+          className="events-header-premium"
         >
-          <div className="header-badge">
-            <Zap size={16} />
-            <span>Don't Miss Out</span>
+          <div className="events-tag-premium">
+            <Trophy size={18} />
+            <span>UPCOMING EVENTS</span>
           </div>
-
-          <h2 className="events-section-title">Upcoming Events</h2>
-          <p className="events-section-subtitle">
+          <h2 className="events-title-premium">Don't Miss Out</h2>
+          <p className="events-desc-premium">
             Join us for exciting basketball action and community gatherings
           </p>
         </motion.div>
 
         {/* Events Grid */}
-        <div className="events-showcase-grid">
+        <div className="events-grid-premium">
           {upcomingEvents.slice(0, 3).map((event, index) => (
             <motion.div
-              key={event.id}
-              initial={{ opacity: 0, y: 50 }}
+              key={event.id || index}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="event-showcase-card"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="event-card-premium"
             >
-              <Link to={`/blog/${event.slug}`} className="event-card-link">
-
+              <Link to={`/post/${event.slug}`} className="event-link-premium">
                 {/* Image */}
-                <div className="event-showcase-image">
+                <div className="event-image-premium">
                   <img
                     src={
                       getImageUrl(event.featured_image) ||
                       'https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=800'
                     }
                     alt={event.title}
-                    loading="lazy"
                   />
+                  <div className="event-gradient-overlay"></div>
 
-                  <div className="event-image-overlay" />
-
-                  {/* Date Badge */}
-                  <div className="event-showcase-date">
-                    <div className="date-icon">
-                      <Calendar size={20} />
-                    </div>
-                    <div className="date-content">
-                      <span className="date-day">
-                        {event.event_date
-                          ? new Date(event.event_date).getDate()
-                          : 'TBA'}
+                  {event.event_date && (
+                    <div className="event-date-badge-premium">
+                      <span className="badge-day-premium">
+                        {new Date(event.event_date).getDate()}
                       </span>
-                      <span className="date-month">
-                        {event.event_date
-                          ? new Date(event.event_date).toLocaleString('default', { month: 'short' })
-                          : 'TBA'}
+                      <span className="badge-month-premium">
+                        {new Date(event.event_date)
+                          .toLocaleString('default', { month: 'short' })
+                          .toUpperCase()}
                       </span>
                     </div>
-                  </div>
-
-                  {/* Quick Info */}
-                  <div className="event-quick-info">
-                    <div className="quick-info-item">
-                      <Users size={14} />
-                      <span>Limited Spots</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Content */}
-                <div className="event-showcase-content">
-                  <h3 className="event-showcase-title">{event.title}</h3>
-                  <p className="event-showcase-excerpt">{event.excerpt}</p>
+                <div className="event-content-premium">
+                  <h3 className="event-title-premium">{event.title}</h3>
 
-                  {/* Details */}
-                  <div className="event-showcase-details">
-                    {event.event_date && (
-                      <div className="event-detail-item">
-                        <Clock size={16} />
-                        <span className="detail-text">
-                          {formatDateTime(event.event_date)}
-                        </span>
+                  {event.excerpt && (
+                    <p className="event-excerpt-premium">
+                      {event.excerpt.length > 100
+                        ? `${event.excerpt.substring(0, 100)}...`
+                        : event.excerpt}
+                    </p>
+                  )}
+
+                  {/* Meta */}
+                  <div className="event-meta-premium">
+                    {event.event_location && (
+                      <div className="event-meta-item-premium">
+                        <MapPin size={16} />
+                        <span>{event.event_location}</span>
                       </div>
                     )}
-
-                    {event.event_location && (
-                      <div className="event-detail-item">
-                        <MapPin size={16} />
-                        <span className="detail-text">
-                          {event.event_location}
-                        </span>
+                    {event.event_date && (
+                      <div className="event-meta-item-premium">
+                        <Calendar size={16} />
+                        <span>{formatDateTime(event.event_date)}</span>
                       </div>
                     )}
                   </div>
 
                   {/* CTA */}
-                  <div className="event-showcase-cta">
+                  <div className="event-action-premium">
                     {event.event_registration_link ? (
                       <a
                         href={event.event_registration_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="event-register-btn"
+                        className="event-btn-premium event-btn-primary"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <span>Register Now</span>
                         <ArrowRight size={18} />
                       </a>
                     ) : (
-                      <div className="event-learn-more">
+                      <div className="event-btn-premium event-btn-secondary">
                         <span>Learn More</span>
                         <ArrowRight size={18} />
                       </div>
                     )}
                   </div>
-
                 </div>
               </Link>
             </motion.div>
           ))}
         </div>
 
-        {/* Footer CTA */}
+        {/* View All */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="events-section-footer"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="events-footer-premium"
         >
-          <Link to="/events" className="view-all-events-btn">
-            <span>View All Events</span>
+          <Link to="/events" className="btn-view-all-premium">
+            View All Events
             <ArrowRight size={20} />
           </Link>
         </motion.div>
-
       </div>
     </section>
   );

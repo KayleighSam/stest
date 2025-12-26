@@ -219,3 +219,25 @@ class NewsletterSerializer(serializers.ModelSerializer):
         if Newsletter.objects.filter(email=value, is_active=True).exists():
             raise serializers.ValidationError("This email is already subscribed.")
         return value
+class ContactMessageSerializer(serializers.ModelSerializer):
+    replied_by_name = serializers.CharField(source='replied_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = ContactMessage
+        fields = [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'inquiry_type',
+            'subject',
+            'message',
+            'is_read',
+            'is_replied',
+            'replied_at',
+            'replied_by',
+            'replied_by_name',
+            'notes',
+            'created_at'
+        ]
+        read_only_fields = ['is_read', 'is_replied', 'replied_at', 'replied_by', 'created_at']

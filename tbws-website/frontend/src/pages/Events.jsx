@@ -1,168 +1,228 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
-import { contentAPI } from '../api/content';
-import { formatDateTime, getImageUrl } from '../utils/formatters';
-import Loading from '../components/common/Loading';
-import ErrorMessage from '../components/common/ErrorMessage';
+import { Calendar, MapPin, Clock, ArrowRight, ChevronRight } from 'lucide-react';
+import { contentService } from '../api/content';
 import { Link } from 'react-router-dom';
 import './Events.css';
 
 const Events = () => {
   const [filter, setFilter] = useState('upcoming');
 
-  // Fetch events based on filter
   const { data, isLoading, error } = useQuery({
     queryKey: ['events', filter],
-    queryFn: () =>
-      filter === 'upcoming'
-        ? contentAPI.getUpcomingEvents()
-        : contentAPI.getPastEvents(),
+    queryFn: async () => {
+      const response = filter === 'upcoming'
+        ? await contentService.getUpcomingEvents()
+        : await contentService.getPastEvents();
+      return response.data;
+    },
   });
 
-  if (isLoading) return <Loading fullScreen />;
+  // Helper function to get image URL
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${url}`;
+  };
 
-  if (error) {
-    console.error('Events Error:', error);
-    return <ErrorMessage message="Failed to load events" />;
+  // Helper function to format date/time
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  // Filter events based on date
+  const now = new Date();
+  const rawEvents = data?.results || data || [];
+  const events = rawEvents.filter(event => {
+    if (!event.event_date) return false;
+    const eventDate = new Date(event.event_date);
+    return filter === 'upcoming' ? eventDate >= now : eventDate < now;
+  });
+
+  if (isLoading) {
+    return (
+      <div className="events-page-pro">
+        <div className="container">
+          <div className="loading-state">Loading events...</div>
+        </div>
+      </div>
+    );
   }
 
-  // Normalize API response
-  const rawData = data?.data || data || [];
-  const events = rawData?.results || rawData?.data || rawData || [];
+  if (error) {
+    return (
+      <div className="events-page-pro">
+        <div className="container">
+          <div className="error-state">
+            <h3>Failed to load events</h3>
+            <p>{error.message}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="events-page">
-      {/* Hero */}
-      <section className="page-hero">
+    <div className="events-page-pro">
+      {/* Hero Banner */}
+      <section className="events-hero-pro">
+        <div className="events-hero-image">
+          <img 
+            src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=1920&q=80" 
+            alt="TBWS Events"
+          />
+          <div className="events-hero-overlay"></div>
+        </div>
+        
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="page-hero-content"
+            className="events-hero-content-pro"
           >
-            <h1>Events & Tournaments</h1>
-            <p>Join us for exciting basketball action and community events</p>
+            <div className="breadcrumb-pro">
+              <span>Home</span>
+              <ChevronRight size={16} />
+              <span>Events</span>
+            </div>
+            
+            <h1 className="events-page-title">EVENTS & TOURNAMENTS</h1>
+            
+            <p className="events-page-subtitle">
+              Join us for exciting basketball action and community gatherings
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Events */}
-      <section className="section events-section">
+      {/* Events Content */}
+      <section className="events-content-pro">
         <div className="container">
-          {/* Filters */}
-          <div className="events-filters">
+          {/* Filter Tabs */}
+          <div className="events-filters-pro">
             <button
               onClick={() => setFilter('upcoming')}
-              className={`filter-tab ${
-                filter === 'upcoming' ? 'filter-tab-active' : ''
-              }`}
+              className={`filter-tab-pro ${filter === 'upcoming' ? 'filter-tab-active' : ''}`}
             >
               Upcoming Events
+              {filter === 'upcoming' && <div className="tab-indicator"></div>}
             </button>
 
             <button
               onClick={() => setFilter('past')}
-              className={`filter-tab ${
-                filter === 'past' ? 'filter-tab-active' : ''
-              }`}
+              className={`filter-tab-pro ${filter === 'past' ? 'filter-tab-active' : ''}`}
             >
               Past Events
+              {filter === 'past' && <div className="tab-indicator"></div>}
             </button>
           </div>
 
-          {/* Grid */}
+          {/* Events Grid */}
           {events.length === 0 ? (
-            <div className="no-events">
-              <Calendar size={64} />
+            <div className="no-events-pro">
+              <Calendar size={64} strokeWidth={1.5} />
               <h3>No {filter} events</h3>
               <p>Check back later for new events and tournaments</p>
             </div>
           ) : (
-            <div className="events-grid">
+            <div className="events-grid-pro">
               {events.map((event, index) => (
                 <motion.div
                   key={event.id || index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
-                  <Link to={`/post/${event.slug}`} className="event-card">
-                    <div className="event-card-image">
-                      <img
-                        src={
-                          getImageUrl(event.featured_image) ||
-                          'https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=800'
-                        }
-                        alt={event.title}
-                      />
+                  <Link to={`/blog/${event.slug}`} className="event-card-pro">
+                    {/* Image */}
+                    <div className="event-image-pro">
+                      <div className="event-image-wrapper-pro">
+                        <img
+                          src={
+                            getImageUrl(event.featured_image) ||
+                            'https://images.unsplash.com/photo-1504450758481-7338eba7524a?w=800'
+                          }
+                          alt={event.title}
+                        />
+                      </div>
 
+                      {/* Date Badge */}
                       {event.event_date && (
-                        <div className="event-date-badge">
-                          <span className="date-month">
+                        <div className="event-date-badge-pro">
+                          <span className="date-month-pro">
                             {new Date(event.event_date).toLocaleString('default', {
                               month: 'short',
-                            })}
+                            }).toUpperCase()}
                           </span>
-                          <span className="date-day">
+                          <span className="date-day-pro">
                             {new Date(event.event_date).getDate()}
                           </span>
                         </div>
                       )}
 
+                      {/* Past Badge */}
                       {filter === 'past' && (
-                        <div className="event-past-badge">Past Event</div>
+                        <div className="event-past-badge-pro">PAST EVENT</div>
                       )}
                     </div>
 
-                    <div className="event-card-content">
-                      <h3 className="event-card-title">{event.title}</h3>
+                    {/* Content */}
+                    <div className="event-content-pro">
+                      <h3 className="event-title-pro">{event.title}</h3>
 
-                      <p className="event-card-excerpt">
-                        {event.excerpt || 'Click to view event details'}
-                      </p>
+                      {event.excerpt && (
+                        <p className="event-excerpt-pro">
+                          {event.excerpt.length > 120
+                            ? `${event.excerpt.substring(0, 120)}...`
+                            : event.excerpt}
+                        </p>
+                      )}
 
-                      <div className="event-card-details">
+                      {/* Meta Info */}
+                      <div className="event-meta-pro">
                         {event.event_date && (
-                          <div className="event-detail">
-                            <Calendar size={18} />
+                          <div className="event-meta-item">
+                            <Calendar size={16} strokeWidth={1.5} />
                             <span>{formatDateTime(event.event_date)}</span>
                           </div>
                         )}
 
                         {event.event_location && (
-                          <div className="event-detail">
-                            <MapPin size={18} />
+                          <div className="event-meta-item">
+                            <MapPin size={16} strokeWidth={1.5} />
                             <span>{event.event_location}</span>
-                          </div>
-                        )}
-
-                        {event.event_venue && (
-                          <div className="event-detail">
-                            <Clock size={18} />
-                            <span>{event.event_venue}</span>
                           </div>
                         )}
                       </div>
 
-                      <div className="event-card-footer">
-                        {event.event_registration_link &&
-                        filter === 'upcoming' ? (
-                          <a
+                      {/* CTA */}
+                      <div className="event-cta-pro">
+                        {event.event_registration_link && filter === 'upcoming' ? (
+                          <a 
                             href={event.event_registration_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn btn-primary"
+                            className="event-register-btn"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            Register Now
+                            <span>Register Now</span>
+                            <ArrowRight size={18} />
                           </a>
                         ) : (
-                          <span className="event-cta">
-                            View Details <ArrowRight size={16} />
+                          <span className="event-view-details">
+                            View Details
+                            <ArrowRight size={18} />
                           </span>
                         )}
                       </div>

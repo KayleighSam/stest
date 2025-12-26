@@ -1,233 +1,373 @@
 /* ============================================
-   League Rules Page
+   League Rules - Professional Design
    ============================================ */
-   .league-rules-page {
+   .league-rules-page-pro {
     min-height: 100vh;
-    background: #fafafa;
+    background: #fff;
   }
   
-  /* Hero */
-  .rules-hero {
+  /* Hero Section */
+  .rules-hero-pro {
     position: relative;
-    padding: 8rem 0 4rem;
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    height: 400px;
     overflow: hidden;
+    background: #0f172a;
   }
   
-  .rules-hero-bg {
+  .rules-hero-image {
     position: absolute;
     inset: 0;
-    background-image: 
-      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.4;
   }
   
-  .rules-hero-content {
+  .rules-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .rules-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(15, 23, 42, 0.95) 0%,
+      rgba(15, 23, 42, 0.7) 50%,
+      rgba(15, 23, 42, 0.95) 100%
+    );
+  }
+  
+  .rules-hero-content-pro {
     position: relative;
     z-index: 10;
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
+    padding-top: 8rem;
     color: white;
   }
   
-  .rules-badge {
-    display: inline-flex;
+  .breadcrumb-pro {
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 50px;
     font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.7);
   }
   
-  .rules-hero-title {
+  .breadcrumb-pro span:last-child {
+    color: #ff6b35;
+  }
+  
+  .rules-page-title {
     font-size: 3.5rem;
     font-weight: 900;
-    line-height: 1.15;
-    margin-bottom: 1.25rem;
+    text-transform: uppercase;
     letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.1;
   }
   
-  .rules-hero-desc {
+  .rules-page-subtitle {
     font-size: 1.25rem;
-    line-height: 1.6;
-    opacity: 0.95;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
   }
   
-  /* Content */
-  .rules-content-section {
-    padding: 5rem 0;
-    background: white;
+  /* Content Section */
+  .rules-content-pro {
+    padding: 4rem 0;
   }
   
-  .no-rules {
-    text-align: center;
-    padding: 5rem 2rem;
+  .rules-layout-pro {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  
+  /* Sidebar */
+  .rules-sidebar-pro {
+    position: relative;
+  }
+  
+  .sidebar-sticky {
+    position: sticky;
+    top: 120px;
+  }
+  
+  .sidebar-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: #64748b;
-  }
-  
-  .no-rules svg {
-    color: #cbd5e1;
     margin-bottom: 1.5rem;
   }
   
-  .no-rules h3 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #334155;
+  .rules-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-item-pro {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-item-pro:hover {
+    background: #f8fafc;
+    color: #0f172a;
+    border-left-color: #cbd5e1;
+  }
+  
+  .nav-item-active {
+    background: #f8fafc;
+    color: #0f172a;
+    border-left-color: #ff6b35;
+  }
+  
+  .rule-count {
+    margin-left: auto;
+    padding: 0.25rem 0.625rem;
+    background: #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  
+  .nav-item-active .rule-count {
+    background: #ff6b35;
+    color: white;
+  }
+  
+  /* Main Content */
+  .rules-main-pro {
+    min-height: 600px;
+  }
+  
+  .section-header-pro {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  
+  .section-title-pro {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #0f172a;
     margin-bottom: 0.5rem;
   }
   
-  .rules-categories {
+  .section-count-pro {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+  }
+  
+  /* Rules List */
+  .rules-list-pro {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 1rem;
   }
   
-  .rules-category-section {
+  .rule-card-pro {
     background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0;
+    overflow: hidden;
+    transition: all 0.2s ease;
   }
   
-  .category-header {
+  .rule-card-pro:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .rule-header-pro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s ease;
+  }
+  
+  .rule-header-pro:hover {
+    background: #fafafa;
+  }
+  
+  .rule-header-left {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 3px solid #e2e8f0;
-  }
-  
-  .category-icon {
-    width: 64px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    border-radius: 16px;
-    color: white;
-  }
-  
-  .category-title {
-    font-size: 2.25rem;
-    font-weight: 900;
-    color: #0f172a;
-    letter-spacing: -0.01em;
-  }
-  
-  .rules-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .rule-item {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-  }
-  
-  .rule-item:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
-    transform: translateX(8px);
-  }
-  
-  .rule-number {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    border-radius: 12px;
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 900;
-  }
-  
-  .rule-content {
     flex: 1;
   }
   
-  .rule-title {
-    font-size: 1.375rem;
+  .rule-number-pro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #0f172a;
+    color: white;
+    font-size: 1.125rem;
     font-weight: 800;
-    color: #0f172a;
-    margin-bottom: 1rem;
+    flex-shrink: 0;
   }
   
-  .rule-text {
-    font-size: 1.0625rem;
+  .rule-title-pro {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.4;
+  }
+  
+  .rule-chevron-pro {
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+  
+  .rule-content-pro {
+    overflow: hidden;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .rule-text-pro {
+    padding: 2rem;
+    font-size: 1rem;
     line-height: 1.8;
     color: #475569;
   }
   
-  .rule-text p {
+  .rule-text-pro p {
     margin-bottom: 1rem;
   }
   
-  .rule-text ul,
-  .rule-text ol {
-    margin: 1rem 0 1rem 1.5rem;
+  .rule-text-pro ul,
+  .rule-text-pro ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
   }
   
-  .rule-text li {
+  .rule-text-pro li {
     margin-bottom: 0.5rem;
   }
   
-  .rule-text strong {
-    font-weight: 700;
+  .rule-text-pro strong {
     color: #0f172a;
+    font-weight: 700;
+  }
+  
+  /* Empty State */
+  .no-rules-pro {
+    text-align: center;
+    padding: 6rem 2rem;
+  }
+  
+  .no-rules-pro svg {
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+  }
+  
+  .no-rules-pro h3 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+  }
+  
+  .no-rules-pro p {
+    font-size: 1.125rem;
+    color: #64748b;
   }
   
   /* Responsive */
+  @media (max-width: 1024px) {
+    .rules-layout-pro {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  
+    .sidebar-sticky {
+      position: static;
+    }
+  
+    .rules-nav {
+      flex-direction: row;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+  
+    .nav-item-pro {
+      flex-shrink: 0;
+      border-left: none;
+      border-bottom: 3px solid transparent;
+    }
+  
+    .nav-item-pro:hover {
+      border-left-color: transparent;
+      border-bottom-color: #cbd5e1;
+    }
+  
+    .nav-item-active {
+      border-left-color: transparent;
+      border-bottom-color: #ff6b35;
+    }
+  }
+  
   @media (max-width: 768px) {
-    .rules-hero-title {
+    .rules-hero-pro {
+      height: 300px;
+    }
+  
+    .rules-page-title {
       font-size: 2.5rem;
     }
   
-    .category-header {
-      flex-direction: column;
-      align-items: flex-start;
+    .rules-page-subtitle {
+      font-size: 1rem;
     }
   
-    .category-title {
-      font-size: 1.75rem;
+    .section-title-pro {
+      font-size: 2rem;
     }
   
-    .rule-item {
-      flex-direction: column;
+    .rule-header-left {
       gap: 1rem;
     }
   
-    .rule-number {
+    .rule-number-pro {
       width: 40px;
       height: 40px;
       font-size: 1rem;
     }
-  }
   
-  @media (max-width: 480px) {
-    .rules-hero-title {
-      font-size: 2rem;
+    .rule-title-pro {
+      font-size: 1rem;
     }
   
-    .category-title {
-      font-size: 1.5rem;
+    .rule-text-pro {
+      padding: 1.5rem;
     }
   }

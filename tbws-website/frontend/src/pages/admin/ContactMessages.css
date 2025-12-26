@@ -1,0 +1,728 @@
+/* ============================================
+   Contact Messages Page
+   ============================================ */
+   .admin-messages {
+    padding: 2rem;
+  }
+  
+  /* Header */
+  .messages-header {
+    margin-bottom: 2rem;
+  }
+  
+  .messages-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .messages-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+  }
+  
+  /* Filters */
+  .messages-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Messages List */
+  .messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .message-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .message-card.unread {
+    border-left: 4px solid #3b82f6;
+    background: #f8fafc;
+  }
+  
+  .message-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .message-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .message-sender h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .message-meta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  .message-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  
+  .message-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .status-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .status-badge.new {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-badge.read {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-badge.replied {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  .message-subject {
+    font-size: 0.9375rem;
+    color: #475569;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .message-subject strong {
+    color: #0f172a;
+  }
+  
+  .message-body {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+  }
+  
+  .message-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+  }
+  
+  .message-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+  }
+  
+  .message-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .action-btn.read {
+    background: #fef3c7;
+    color: #f59e0b;
+  }
+  
+  .action-btn.read:hover {
+    background: #f59e0b;
+    color: white;
+  }
+  
+  .action-btn.replied {
+    background: #d1fae5;
+    color: #10b981;
+    font-weight: 700;
+  }
+  
+  .action-btn.replied:hover {
+    background: #10b981;
+    color: white;
+  }
+  
+  .action-btn.delete {
+    background: #fef2f2;
+    color: #ef4444;
+  }
+  
+  .action-btn.delete:hover {
+    background: #ef4444;
+    color: white;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-messages {
+      padding: 1.5rem;
+    }
+  
+    .messages-filters {
+      flex-direction: column;
+    }
+  
+    .message-header-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .message-badges {
+      align-self: flex-start;
+    }
+  
+    .message-footer {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  
+    .message-actions {
+      align-self: flex-end;
+    }
+  }
+  /* Add to ContactMessages.css */
+
+.error-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  
+  .error-state svg {
+    color: #ef4444;
+    margin-bottom: 1.5rem;
+  }
+  
+  .error-state h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .error-state p {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-retry {
+    padding: 0.875rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn-retry:hover {
+    background: #2563eb;
+  }
+  /* ============================================
+   Contact Messages Page
+   ============================================ */
+.admin-messages {
+    padding: 2rem;
+  }
+  
+  /* Header */
+  .messages-header {
+    margin-bottom: 2rem;
+  }
+  
+  .messages-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .messages-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+  }
+  
+  /* Filters */
+  .messages-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-box {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+  }
+  
+  .search-box svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+  }
+  
+  .search-box input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+  }
+  
+  .search-box input:focus {
+    outline: none;
+    border-color: #cbd5e1;
+  }
+  
+  .filter-select {
+    padding: 0.875rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    min-width: 150px;
+    cursor: pointer;
+  }
+  
+  .filter-select:focus {
+    outline: none;
+    border-color: #cbd5e1;
+  }
+  
+  /* Messages List */
+  .messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .message-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .message-card.unread {
+    border-left: 4px solid #3b82f6;
+    background: #f8fafc;
+  }
+  
+  .message-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .message-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .message-sender h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .message-meta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  .message-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  
+  .message-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .status-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .status-badge.new {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-badge.read {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-badge.replied {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  .type-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .message-subject {
+    font-size: 0.9375rem;
+    color: #475569;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .message-subject strong {
+    color: #0f172a;
+  }
+  
+  .message-body {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #64748b;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+  }
+  
+  .message-notes {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #78350f;
+    margin-bottom: 1rem;
+  }
+  
+  .message-notes svg {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+  
+  .message-notes strong {
+    margin-right: 0.375rem;
+  }
+  
+  .reply-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #d1fae5;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #065f46;
+    margin-bottom: 1rem;
+  }
+  
+  .message-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+  }
+  
+  .message-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+  }
+  
+  .message-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .action-btn.read {
+    background: #fef3c7;
+    color: #f59e0b;
+  }
+  
+  .action-btn.read:hover:not(:disabled) {
+    background: #f59e0b;
+    color: white;
+  }
+  
+  .action-btn.reply {
+    background: #dbeafe;
+    color: #3b82f6;
+  }
+  
+  .action-btn.reply:hover:not(:disabled) {
+    background: #3b82f6;
+    color: white;
+  }
+  
+  .action-btn.edit-notes {
+    background: #f3e8ff;
+    color: #7c3aed;
+  }
+  
+  .action-btn.edit-notes:hover:not(:disabled) {
+    background: #7c3aed;
+    color: white;
+  }
+  
+  .action-btn.delete {
+    background: #fef2f2;
+    color: #ef4444;
+  }
+  
+  .action-btn.delete:hover:not(:disabled) {
+    background: #ef4444;
+    color: white;
+  }
+  
+  /* Reply Modal */
+  .reply-modal {
+    max-width: 700px;
+  }
+  
+  .message-details {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .detail-row {
+    margin-bottom: 0.75rem;
+    font-size: 0.9375rem;
+  }
+  
+  .detail-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detail-row strong {
+    color: #0f172a;
+    margin-right: 0.5rem;
+  }
+  
+  .detail-row.message-text {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .detail-row.message-text p {
+    margin-top: 0.5rem;
+    color: #64748b;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  
+  .reply-instructions {
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .reply-instructions p {
+    font-size: 0.875rem;
+    color: #1e40af;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .notes-textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    resize: vertical;
+    font-family: inherit;
+  }
+  
+  .notes-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+  
+  /* Error State */
+  .error-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  
+  .error-state svg {
+    color: #ef4444;
+    margin-bottom: 1.5rem;
+  }
+  
+  .error-state h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .error-state p {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-retry {
+    padding: 0.875rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn-retry:hover {
+    background: #2563eb;
+  }
+  
+  /* Empty & Loading States */
+  .loading-state,
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  
+  .empty-state svg {
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-state p {
+    font-size: 1rem;
+    color: #64748b;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-messages {
+      padding: 1.5rem;
+    }
+  
+    .messages-filters {
+      flex-direction: column;
+    }
+  
+    .search-box {
+      max-width: 100%;
+    }
+  
+    .filter-select {
+      width: 100%;
+    }
+  
+    .message-header-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .message-badges {
+      align-self: flex-start;
+    }
+  
+    .message-footer {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  
+    .message-actions {
+      align-self: flex-end;
+    }
+  }

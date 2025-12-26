@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Users, ClipboardList, Award, Mail, Phone } from 'lucide-react';
+import { Users, ClipboardList, Award, Mail, Phone, ChevronRight, CheckCircle, Target } from 'lucide-react';
 import { pagesAPI } from '../api/pages';
 import { getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
@@ -27,38 +27,51 @@ const ManagerInfo = () => {
   const managers = rawManagers?.results || rawManagers?.data || rawManagers || [];
 
   return (
-    <div className="manager-info-page">
-      {/* Hero */}
-      <section className="manager-hero">
-        <div className="manager-hero-bg"></div>
+    <div className="manager-info-page-pro">
+      {/* Hero Banner */}
+      <section className="manager-hero-pro">
+        <div className="manager-hero-image">
+          <img 
+            src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1920&q=80" 
+            alt="Team Managers"
+          />
+          <div className="manager-hero-overlay"></div>
+        </div>
+        
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="manager-hero-content"
+            className="manager-hero-content-pro"
           >
-            <div className="manager-badge">
-              <ClipboardList size={20} />
+            <div className="breadcrumb-pro">
+              <span>Home</span>
+              <ChevronRight size={16} />
               <span>Team Managers</span>
             </div>
-            <h1 className="manager-hero-title">
-              {managerInfo?.title || 'Team Manager Information'}
+            
+            <h1 className="manager-page-title">
+              {managerInfo?.title || 'TEAM MANAGER INFORMATION'}
             </h1>
             
-            {/* Contact Info */}
+            <p className="manager-page-subtitle">
+              Leadership, dedication, and excellence in team management
+            </p>
+
+            {/* Contact Buttons */}
             {(managerInfo?.contact_email || managerInfo?.contact_phone) && (
-              <div className="manager-hero-contact">
+              <div className="manager-hero-actions">
                 {managerInfo.contact_email && (
-                  <a href={`mailto:${managerInfo.contact_email}`} className="contact-btn">
-                    <Mail size={18} />
-                    <span>{managerInfo.contact_email}</span>
+                  <a href={`mailto:${managerInfo.contact_email}`} className="hero-action-btn">
+                    <Mail size={20} />
+                    <span>Email Us</span>
                   </a>
                 )}
                 {managerInfo.contact_phone && (
-                  <a href={`tel:${managerInfo.contact_phone}`} className="contact-btn">
-                    <Phone size={18} />
-                    <span>{managerInfo.contact_phone}</span>
+                  <a href={`tel:${managerInfo.contact_phone}`} className="hero-action-btn">
+                    <Phone size={20} />
+                    <span>Call Us</span>
                   </a>
                 )}
               </div>
@@ -67,41 +80,45 @@ const ManagerInfo = () => {
         </div>
       </section>
 
-      {/* Content */}
-      <section className="manager-content-section">
-        <div className="container">
-          <div className="manager-content-layout">
-            {/* Overview */}
-            {managerInfo?.overview && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="manager-section"
-              >
-                <div 
-                  className="manager-text-content"
-                  dangerouslySetInnerHTML={{ __html: managerInfo.overview }}
-                />
-              </motion.div>
-            )}
+      {/* Overview Section */}
+      {managerInfo?.overview && (
+        <section className="manager-overview-pro">
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="overview-content-pro"
+            >
+              <div 
+                className="overview-text-pro"
+                dangerouslySetInnerHTML={{ __html: managerInfo.overview }}
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
 
+      {/* Info Sections */}
+      <section className="manager-sections-pro">
+        <div className="container">
+          <div className="sections-grid-pro">
             {/* Responsibilities */}
             {managerInfo?.responsibilities_content && (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="manager-section"
+                className="info-section-pro"
               >
-                <div className="section-icon">
-                  <ClipboardList size={28} />
+                <div className="section-icon-pro">
+                  <ClipboardList size={32} strokeWidth={1.5} />
                 </div>
-                <h2 className="section-title">
-                  {managerInfo.responsibilities_title || 'Manager Responsibilities'}
+                <h2 className="section-heading-pro">
+                  {managerInfo.responsibilities_title || 'RESPONSIBILITIES'}
                 </h2>
                 <div 
-                  className="manager-text-content"
+                  className="section-content-pro"
                   dangerouslySetInnerHTML={{ __html: managerInfo.responsibilities_content }}
                 />
               </motion.div>
@@ -113,16 +130,17 @@ const ManagerInfo = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="manager-section"
+                transition={{ delay: 0.1 }}
+                className="info-section-pro"
               >
-                <div className="section-icon">
-                  <ClipboardList size={28} />
+                <div className="section-icon-pro">
+                  <CheckCircle size={32} strokeWidth={1.5} />
                 </div>
-                <h2 className="section-title">
-                  {managerInfo.requirements_title || 'Requirements'}
+                <h2 className="section-heading-pro">
+                  {managerInfo.requirements_title || 'REQUIREMENTS'}
                 </h2>
                 <div 
-                  className="manager-text-content"
+                  className="section-content-pro"
                   dangerouslySetInnerHTML={{ __html: managerInfo.requirements_content }}
                 />
               </motion.div>
@@ -134,16 +152,17 @@ const ManagerInfo = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="manager-section"
+                transition={{ delay: 0.2 }}
+                className="info-section-pro"
               >
-                <div className="section-icon">
-                  <Award size={28} />
+                <div className="section-icon-pro">
+                  <Award size={32} strokeWidth={1.5} />
                 </div>
-                <h2 className="section-title">
-                  {managerInfo.benefits_title || 'Benefits'}
+                <h2 className="section-heading-pro">
+                  {managerInfo.benefits_title || 'BENEFITS'}
                 </h2>
                 <div 
-                  className="manager-text-content"
+                  className="section-content-pro"
                   dangerouslySetInnerHTML={{ __html: managerInfo.benefits_content }}
                 />
               </motion.div>
@@ -155,13 +174,17 @@ const ManagerInfo = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="manager-section manager-cta-section"
+                transition={{ delay: 0.3 }}
+                className="info-section-pro"
               >
-                <h2 className="section-title">
-                  {managerInfo.how_to_become_title || 'How to Become a Manager'}
+                <div className="section-icon-pro">
+                  <Target size={32} strokeWidth={1.5} />
+                </div>
+                <h2 className="section-heading-pro">
+                  {managerInfo.how_to_become_title || 'HOW TO BECOME A MANAGER'}
                 </h2>
                 <div 
-                  className="manager-text-content"
+                  className="section-content-pro"
                   dangerouslySetInnerHTML={{ __html: managerInfo.how_to_become_content }}
                 />
               </motion.div>
@@ -172,61 +195,83 @@ const ManagerInfo = () => {
 
       {/* Current Managers */}
       {managers.length > 0 && (
-        <section className="managers-list-section">
+        <section className="managers-roster-pro">
           <div className="container">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="managers-header"
+              className="roster-header-pro"
             >
-              <h2 className="managers-title">Our Team Managers</h2>
-              <p className="managers-subtitle">Meet the dedicated individuals leading our teams</p>
+              <h2 className="roster-title-pro">OUR TEAM MANAGERS</h2>
+              <p className="roster-subtitle-pro">
+                Meet the dedicated leaders guiding our teams to excellence
+              </p>
             </motion.div>
 
-            <div className="managers-grid">
+            <div className="managers-grid-pro">
               {managers.map((manager, index) => (
                 <motion.div
                   key={manager.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="manager-card"
+                  transition={{ delay: index * 0.1 }}
+                  className="manager-card-pro"
                 >
-                  <div className="manager-photo-wrapper">
-                    <img
-                      src={
-                        getImageUrl(manager.photo) ||
-                        `https://ui-avatars.com/api/?name=${encodeURIComponent(manager.name)}&size=200&background=f97316&color=fff&bold=true`
-                      }
-                      alt={manager.name}
-                      className="manager-photo"
-                    />
-                  </div>
-                  <div className="manager-details">
-                    <h3 className="manager-name">{manager.name}</h3>
-                    {manager.team_name && (
-                      <p className="manager-team">{manager.team_name}</p>
-                    )}
+                  {/* Photo */}
+                  <div className="manager-photo-container">
+                    <div className="manager-photo-wrapper">
+                      <img
+                        src={
+                          getImageUrl(manager.photo) ||
+                          `https://ui-avatars.com/api/?name=${encodeURIComponent(manager.name)}&size=400&background=0f172a&color=fff&bold=true`
+                        }
+                        alt={manager.name}
+                        className="manager-photo-pro"
+                      />
+                    </div>
+                    
+                    {/* Experience Badge */}
                     {manager.years_experience && (
-                      <p className="manager-experience">
-                        {manager.years_experience} years experience
-                      </p>
+                      <div className="experience-badge-pro">
+                        <span className="experience-number">{manager.years_experience}</span>
+                        <span className="experience-label">Years</span>
+                      </div>
                     )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="manager-details-pro">
+                    <h3 className="manager-name-pro">{manager.name}</h3>
+                    
+                    {manager.team_name && (
+                      <p className="manager-team-pro">{manager.team_name}</p>
+                    )}
+
                     {manager.bio && (
-                      <p className="manager-bio">{manager.bio}</p>
+                      <p className="manager-bio-pro">{manager.bio}</p>
                     )}
+
+                    {/* Contact Links */}
                     {(manager.email || manager.phone) && (
-                      <div className="manager-contact-info">
+                      <div className="manager-contact-pro">
                         {manager.email && (
-                          <a href={`mailto:${manager.email}`} className="manager-contact-link">
-                            <Mail size={16} />
+                          <a 
+                            href={`mailto:${manager.email}`} 
+                            className="contact-link-pro"
+                            title="Email"
+                          >
+                            <Mail size={18} strokeWidth={1.5} />
                           </a>
                         )}
                         {manager.phone && (
-                          <a href={`tel:${manager.phone}`} className="manager-contact-link">
-                            <Phone size={16} />
+                          <a 
+                            href={`tel:${manager.phone}`} 
+                            className="contact-link-pro"
+                            title="Phone"
+                          >
+                            <Phone size={18} strokeWidth={1.5} />
                           </a>
                         )}
                       </div>

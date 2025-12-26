@@ -1,436 +1,500 @@
 /* ============================================
-   Hero Section
+   Hero Section - LionSports Style
    ============================================ */
-   .hero-section {
+   .hero-section-modern {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100vh - 120px);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 0 4rem;
     overflow: hidden;
-    padding: 8rem 0 4rem;
   }
   
-  /* Background */
-  .hero-background {
+  /* ============================================
+     Background Image (Large & Bold)
+     ============================================ */
+  .hero-bg-image {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    z-index: 1;
   }
   
-  .hero-gradient {
+  .hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, 
-      #1e3a8a 0%, 
-      #1e40af 25%, 
-      #2563eb 50%,
-      #3b82f6 75%,
-      #60a5fa 100%
+    background: rgba(30, 41, 59, 0.75);
+  }
+  
+  .hero-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.95) 0%,
+      rgba(51, 65, 85, 0.85) 50%,
+      rgba(30, 41, 59, 0.9) 100%
     );
   }
   
-  .hero-pattern {
-    position: absolute;
-    inset: 0;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.3;
-  }
-  
-  .hero-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-  }
-  
-  .hero-blob-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, #ff6b35 0%, #f7931e 100%);
-    top: -200px;
-    right: -200px;
-  }
-  
-  .hero-blob-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, #8b5cf6 0%, #ec4899 100%);
-    bottom: -150px;
-    left: -150px;
-  }
-  
-  /* Content */
-  .hero-content {
+  /* ============================================
+     Main Content
+     ============================================ */
+  .hero-content-modern {
     position: relative;
     z-index: 10;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
   }
   
-  /* Text Content */
-  .hero-text {
-    color: white;
+  .hero-main-content {
+    max-width: 900px;
   }
   
-  .hero-badge {
+  /* Season Badge */
+  .hero-season-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 107, 53, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 107, 53, 0.3);
     border-radius: 50px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    color: #ff6b35;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
-  .hero-title {
-    font-size: 4rem;
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #ff6b35;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+  
+  /* Main Title */
+  .hero-title-modern {
+    font-size: 5rem;
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.05;
+    color: white;
     margin-bottom: 1.5rem;
-    letter-spacing: -0.02em;
+    letter-spacing: -2px;
+    text-transform: uppercase;
   }
   
-  .hero-title-highlight {
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  .title-line-1,
+  .title-line-2 {
+    display: block;
+  }
+  
+  .title-line-2 {
+    background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
-  .hero-description {
-    font-size: 1.25rem;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 2.5rem;
-    max-width: 540px;
+  /* Tagline */
+  .hero-tagline-modern {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
   
-  .hero-actions {
+  /* Description */
+  .hero-description-modern {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+    margin-bottom: 3rem;
+    max-width: 700px;
+  }
+  
+  /* ============================================
+     Action Buttons
+     ============================================ */
+  .hero-actions-modern {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.5rem;
     margin-bottom: 3rem;
   }
   
-  .hero-btn-primary,
-  .hero-btn-outline {
+  .btn-hero-primary {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 2rem;
+    gap: 0.75rem;
+    padding: 1.125rem 2.5rem;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
     font-weight: 700;
-    font-size: 1rem;
-    border-radius: 12px;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
     transition: all 0.3s ease;
   }
   
-  .hero-btn-primary {
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-    color: white;
-    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+  .btn-hero-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.5);
   }
   
-  .hero-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
-  }
-  
-  .hero-btn-outline {
+  .btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 2.5rem;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
     color: white;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    transition: all 0.3s ease;
   }
   
-  .hero-btn-outline:hover {
-    background: white;
-    color: #1e3a8a;
-    transform: translateY(-2px);
+  .btn-hero-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
   }
   
-  /* Stats */
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  /* ============================================
+     Quick Links
+     ============================================ */
+  .hero-quick-links {
+    display: flex;
     gap: 1.5rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    flex-wrap: wrap;
   }
   
-  .hero-stat-card {
+  .quick-link-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    gap: 0.75rem;
+    padding: 1rem 1.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
     transition: all 0.3s ease;
-    cursor: pointer;
   }
   
-  .hero-stat-card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-5px);
+  .quick-link-item:hover {
+    background: rgba(255, 107, 53, 0.2);
+    border-color: #ff6b35;
+    transform: translateX(4px);
   }
   
-  .hero-stat-icon {
-    width: 56px;
-    height: 56px;
+  .quick-link-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 107, 53, 0.2);
+    border-radius: 6px;
+    color: #ff6b35;
+  }
+  
+  /* ============================================
+     Stats Bar (Like LionSports Bottom Stats)
+     ============================================ */
+  .hero-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5rem 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    color: white;
-    flex-shrink: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   }
   
-  .hero-stat-content {
+  .stat-item-modern {
+    text-align: center;
     flex: 1;
   }
   
-  .hero-stat-number {
-    font-size: 1.75rem;
+  .stat-number-modern {
+    font-size: 3rem;
     font-weight: 900;
+    color: white;
     line-height: 1;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
-  .hero-stat-label {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 500;
+  .stat-label-modern {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
-  /* Visual Content */
-  .hero-visual {
-    position: relative;
+  .stat-divider {
+    width: 1px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
   }
   
-  .hero-image-wrapper {
-    position: relative;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-  }
-  
-  .hero-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 24px;
-  }
-  
-  .hero-image-decoration {
+  /* ============================================
+     Featured Banner (Like LionSports Bottom Banner)
+     ============================================ */
+  .hero-featured-banner {
     position: absolute;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-    opacity: 0.2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+    padding: 1.25rem 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
   }
   
-  .hero-decoration-1 {
-    width: 100%;
-    height: 100%;
-    top: -20px;
-    left: -20px;
-    z-index: -1;
-  }
-  
-  .hero-decoration-2 {
-    width: 80%;
-    height: 80%;
-    bottom: -30px;
-    right: -30px;
-    z-index: -2;
-    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-  }
-  
-  /* Achievement Card */
-  .hero-achievement-card {
-    position: absolute;
-    bottom: -30px;
-    left: -30px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem 2rem;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    max-width: 280px;
-    transition: all 0.3s ease;
-  }
-  
-  .hero-achievement-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-  }
-  
-  .achievement-icon {
-    width: 64px;
-    height: 64px;
+  .banner-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-    border-radius: 16px;
+    gap: 1.5rem;
     color: white;
-    flex-shrink: 0;
   }
   
-  .achievement-content {
-    flex: 1;
+  .banner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
   }
   
-  .achievement-number {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    line-height: 1;
-    margin-bottom: 0.25rem;
-  }
-  
-  .achievement-text {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+  .banner-text {
+    font-size: 1.0625rem;
     font-weight: 600;
   }
   
-  .achievement-sparkle {
-    font-size: 1.5rem;
-    animation: sparkle 2s ease-in-out infinite;
+  .banner-text strong {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
-  @keyframes sparkle {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-  }
-  
-  /* Scroll Indicator */
-  .hero-scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
+  .banner-link {
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    z-index: 20;
-  }
-  
-  .scroll-mouse {
-    width: 28px;
-    height: 44px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 50px;
-    display: flex;
-    justify-content: center;
-    padding-top: 8px;
-  }
-  
-  .scroll-wheel {
-    width: 4px;
-    height: 10px;
+    padding: 0.75rem 1.75rem;
     background: white;
-    border-radius: 10px;
-    animation: scroll 2s ease-in-out infinite;
-  }
-  
-  @keyframes scroll {
-    0% { opacity: 1; transform: translateY(0); }
-    50% { opacity: 0.5; transform: translateY(8px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-  
-  .scroll-text {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 600;
+    color: #ff6b35;
+    font-weight: 700;
+    text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-size: 0.9375rem;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  .banner-link:hover {
+    background: #f8fafc;
+    transform: translateX(4px);
   }
   
   /* ============================================
      Responsive Design
      ============================================ */
+  @media (max-width: 1200px) {
+    .hero-title-modern {
+      font-size: 4rem;
+    }
+  
+    .hero-tagline-modern {
+      font-size: 1.25rem;
+    }
+  
+    .hero-stats-bar {
+      padding: 2rem;
+    }
+  
+    .stat-number-modern {
+      font-size: 2.5rem;
+    }
+  }
+  
   @media (max-width: 1024px) {
-    .hero-content {
-      grid-template-columns: 1fr;
-      gap: 3rem;
+    .hero-section-modern {
+      min-height: calc(100vh - 100px);
+      padding: 4rem 0 3rem;
     }
   
-    .hero-title {
-      font-size: 3rem;
+    .hero-title-modern {
+      font-size: 3.5rem;
     }
   
-    .hero-visual {
-      order: -1;
+    .hero-description-modern {
+      font-size: 1.125rem;
     }
   
-    .hero-stats {
-      grid-template-columns: repeat(3, 1fr);
+    .hero-stats-bar {
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+  
+    .stat-divider {
+      display: none;
+    }
+  
+    .stat-item-modern {
+      flex: 0 0 calc(50% - 1rem);
     }
   }
   
   @media (max-width: 768px) {
-    .hero-section {
-      padding: 6rem 0 3rem;
+    .hero-section-modern {
+      padding: 3rem 0 2rem;
     }
   
-    .hero-title {
+    .hero-title-modern {
       font-size: 2.5rem;
+      letter-spacing: -1px;
     }
   
-    .hero-description {
-      font-size: 1.125rem;
+    .hero-tagline-modern {
+      font-size: 1rem;
+      letter-spacing: 1px;
     }
   
-    .hero-stats {
-      grid-template-columns: 1fr;
+    .hero-description-modern {
+      font-size: 1rem;
+      margin-bottom: 2rem;
     }
   
-    .hero-achievement-card {
-      position: static;
-      margin-top: 2rem;
-      max-width: 100%;
-    }
-  
-    .hero-actions {
+    .hero-actions-modern {
       flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
     }
   
-    .hero-btn-primary,
-    .hero-btn-outline {
+    .btn-hero-primary,
+    .btn-hero-secondary {
+      justify-content: center;
+      width: 100%;
+    }
+  
+    .hero-quick-links {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .quick-link-item {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .hero-stats-bar {
+      padding: 1.5rem;
+    }
+  
+    .stat-item-modern {
+      flex: 0 0 100%;
+    }
+  
+    .stat-number-modern {
+      font-size: 2rem;
+    }
+  
+    .banner-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+    }
+  
+    .banner-link {
       width: 100%;
       justify-content: center;
     }
   }
   
   @media (max-width: 480px) {
-    .hero-title {
+    .hero-title-modern {
       font-size: 2rem;
     }
   
-    .hero-stat-card {
-      padding: 1rem;
+    .hero-season-badge {
+      font-size: 0.8125rem;
+      padding: 0.625rem 1.25rem;
     }
   
-    .hero-stat-icon {
-      width: 48px;
-      height: 48px;
+    .stat-number-modern {
+      font-size: 1.75rem;
     }
   
-    .hero-stat-number {
-      font-size: 1.5rem;
+    .stat-label-modern {
+      font-size: 0.8125rem;
     }
   }
+  
+  /* ============================================
+     Animations
+     ============================================ */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .hero-main-content > * {
+    animation: fadeInUp 0.8s ease-out backwards;
+  }
+  
+  .hero-season-badge { animation-delay: 0.1s; }
+  .hero-title-modern { animation-delay: 0.2s; }
+  .hero-tagline-modern { animation-delay: 0.3s; }
+  .hero-description-modern { animation-delay: 0.4s; }
+  .hero-actions-modern { animation-delay: 0.5s; }
+  .hero-quick-links { animation-delay: 0.6s; }

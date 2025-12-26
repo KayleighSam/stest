@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowRight, Users, Trophy, Target, Sparkles } from 'lucide-react';
+import { ArrowRight, Play, Shield, Users, Calendar } from 'lucide-react';
 import { pagesAPI } from '../../api/pages';
 import { getImageUrl } from '../../utils/formatters';
 import './Hero.css';
@@ -16,198 +16,142 @@ const Hero = () => {
 
   const settings = settingsData?.data || settingsData;
 
-  const stats = [
-    { 
-      icon: <Users size={28} />,
-      number: '500+', 
-      label: 'Active Members',
-      color: 'from-blue-500 to-cyan-500'
-    },
-    { 
-      icon: <Trophy size={28} />,
-      number: '100+', 
-      label: 'Tournaments',
-      color: 'from-orange-500 to-red-500'
-    },
-    { 
-      icon: <Target size={28} />,
-      number: '20+', 
-      label: 'Years Legacy',
-      color: 'from-purple-500 to-pink-500'
-    },
+  const quickLinks = [
+    { icon: <Calendar size={20} />, label: 'Upcoming Events', path: '/events' },
+    { icon: <Users size={20} />, label: 'Join League', path: '/contact' },
+    { icon: <Shield size={20} />, label: 'League Rules', path: '/league-rules' },
   ];
 
   return (
-    <section className="hero-section">
-      {/* Animated Background */}
-      <div className="hero-background">
-        <div className="hero-gradient"></div>
-        <div className="hero-pattern"></div>
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="hero-blob hero-blob-1"
+    <section className="hero-section-modern">
+      {/* Large Background Image */}
+      <div className="hero-bg-image">
+        <img
+          src={
+            getImageUrl(settings?.hero_image) ||
+            getImageUrl(settings?.about_image) ||
+            'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1920'
+          }
+          alt="TBWS Basketball"
+          className="hero-bg-img"
         />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="hero-blob hero-blob-2"
-        />
+        <div className="hero-overlay"></div>
+        <div className="hero-overlay-gradient"></div>
       </div>
 
       <div className="container">
-        <div className="hero-content">
-          {/* Left Content */}
-          <div className="hero-text">
+        <div className="hero-content-modern">
+          {/* Main Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="hero-main-content"
+          >
+            {/* Season Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="hero-badge"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="hero-season-badge"
             >
-              <Sparkles size={16} />
-              <span>Welcome to {settings?.site_name || 'TBWS'}</span>
+              <span className="badge-dot"></span>
+              <span>2024/2025 Season</span>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="hero-title"
-            >
-              {settings?.tagline ? (
-                <>
-                  {settings.tagline.split(' ').slice(0, -1).join(' ')}
-                  <span className="hero-title-highlight">
-                    {' ' + settings.tagline.split(' ').slice(-1)}
-                  </span>
-                </>
-              ) : (
-                <>
-                  Building Basketball
-                  <span className="hero-title-highlight"> Excellence</span>
-                </>
-              )}
-            </motion.h1>
+            {/* Main Heading */}
+            <h1 className="hero-title-modern">
+              <span className="title-line-1">TUSKER BASKETBALL</span>
+              <span className="title-line-2">WELFARE SOCIETY</span>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="hero-description"
-            >
+            {/* Tagline */}
+            <p className="hero-tagline-modern">
+              {settings?.tagline || 'Building Basketball Excellence in Kenya'}
+            </p>
+
+            {/* Description */}
+            <p className="hero-description-modern">
               {settings?.description || 
-                "Join Kenya's premier basketball community. Compete, grow, and excel in a supportive environment dedicated to the love of the game."}
-            </motion.p>
+                "Join Kenya's premier basketball community. Compete at the highest level, develop your skills, and be part of our rich basketball legacy."}
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="hero-actions"
-            >
-              <Link to="/contact" className="btn btn-primary btn-lg hero-btn-primary">
-                Join Our League
+            {/* Action Buttons */}
+            <div className="hero-actions-modern">
+              <Link to="/contact" className="btn-hero-primary">
+                <span>Join TBWS</span>
                 <ArrowRight size={20} />
               </Link>
-              <Link to="/about" className="btn btn-outline btn-lg hero-btn-outline">
-                Learn More
+              <Link to="/events" className="btn-hero-secondary">
+                <Play size={20} />
+                <span>Watch Highlights</span>
               </Link>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="hero-stats"
-            >
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -5 }}
-                  className="hero-stat-card"
-                >
-                  <div className={`hero-stat-icon bg-gradient-to-br ${stat.color}`}>
-                    {stat.icon}
-                  </div>
-                  <div className="hero-stat-content">
-                    <div className="hero-stat-number">{stat.number}</div>
-                    <div className="hero-stat-label">{stat.label}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Right Content - Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="hero-visual"
-          >
-            <div className="hero-image-wrapper">
-              <img
-                src={
-                  getImageUrl(settings?.hero_image) ||
-                  getImageUrl(settings?.about_image) ||
-                  'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800'
-                }
-                alt={`${settings?.site_name || 'TBWS'} Basketball`}
-                className="hero-image"
-              />
-              
-              <div className="hero-image-decoration hero-decoration-1"></div>
-              <div className="hero-image-decoration hero-decoration-2"></div>
             </div>
 
-            {/* Floating Achievement Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              whileHover={{ y: -5 }}
-              className="hero-achievement-card"
-            >
-              <div className="achievement-icon">
-                <Trophy size={32} />
-              </div>
-              <div className="achievement-content">
-                <div className="achievement-number">100+</div>
-                <div className="achievement-text">Tournaments Hosted</div>
-              </div>
-              <div className="achievement-sparkle">✨</div>
-            </motion.div>
+            {/* Quick Links */}
+            <div className="hero-quick-links">
+              {quickLinks.map((link, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                >
+                  <Link to={link.path} className="quick-link-item">
+                    <div className="quick-link-icon">{link.icon}</div>
+                    <span>{link.label}</span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Stats Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="hero-stats-bar"
+          >
+            <div className="stat-item-modern">
+              <div className="stat-number-modern">500+</div>
+              <div className="stat-label-modern">Active Members</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item-modern">
+              <div className="stat-number-modern">50+</div>
+              <div className="stat-label-modern">Teams</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item-modern">
+              <div className="stat-number-modern">100+</div>
+              <div className="stat-label-modern">Tournaments</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item-modern">
+              <div className="stat-number-modern">20+</div>
+              <div className="stat-label-modern">Years Legacy</div>
+            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        animate={{ y: [0, 12, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="hero-scroll-indicator"
-      >
-        <div className="scroll-mouse">
-          <div className="scroll-wheel"></div>
+      {/* Featured Banner */}
+      <div className="hero-featured-banner">
+        <div className="container">
+          <div className="banner-content">
+            <div className="banner-icon">
+              <Shield size={24} />
+            </div>
+            <div className="banner-text">
+              <strong>2024 Championship Finals</strong> - Registration Now Open
+            </div>
+            <Link to="/events" className="banner-link">
+              Register Now <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-        <span className="scroll-text">Scroll to explore</span>
-      </motion.div>
+      </div>
     </section>
   );
 };

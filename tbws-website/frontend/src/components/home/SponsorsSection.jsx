@@ -11,7 +11,6 @@ const SponsorsSection = () => {
     queryFn: () => pagesAPI.getSponsors(),
   });
 
-  // ✅ Normalize API response safely
   const sponsorsList = Array.isArray(data?.results)
     ? data.results
     : Array.isArray(data?.data)
@@ -23,36 +22,51 @@ const SponsorsSection = () => {
   if (isLoading || error || sponsorsList.length === 0) return null;
 
   return (
-    <section className="section sponsors-section">
+    <section className="sponsors-section-modern">
       <div className="container">
-        <div className="section-title">
-          <h2>Our Partners & Sponsors</h2>
-          <p>Proudly supported by these amazing organizations</p>
-        </div>
-
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="sponsors-grid"
+          className="sponsors-header-modern"
         >
-          {sponsorsList.map((sponsor) => (
-            <a
+          <div className="sponsors-header-tag">
+            <span className="tag-line-sponsors"></span>
+            <span className="tag-text-sponsors">OUR PARTNERS</span>
+          </div>
+          <h2 className="sponsors-title-modern">Proudly Supported By</h2>
+          <p className="sponsors-subtitle-modern">
+            Working together to build basketball excellence
+          </p>
+        </motion.div>
+
+        {/* Sponsors Grid */}
+        <div className="sponsors-grid-modern">
+          {sponsorsList.map((sponsor, index) => (
+            <motion.a
               key={sponsor.id}
               href={sponsor.website_url || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="sponsor-card"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              whileHover={{ y: -5 }}
+              className="sponsor-card-modern"
             >
-              <img
-                src={getImageUrl(sponsor.logo)}
-                alt={sponsor.name}
-                className="sponsor-logo"
-              />
-            </a>
+              <div className="sponsor-logo-wrapper">
+                <img
+                  src={getImageUrl(sponsor.logo)}
+                  alt={sponsor.name}
+                  className="sponsor-logo-modern"
+                />
+              </div>
+            </motion.a>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

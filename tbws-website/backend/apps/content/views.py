@@ -21,35 +21,37 @@ from .serializers import (
 from .permissions import IsAuthorOrReadOnly
 
 
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet for viewing categories
-    """
+class CategoryViewSet(viewsets.ModelViewSet):  # Changed from ReadOnlyModelViewSet
+    """ViewSet for categories - Full CRUD"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = 'slug'
-    permission_classes = [AllowAny]
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    ViewSet for viewing tags
-    """
+class TagViewSet(viewsets.ModelViewSet):  # Changed from ReadOnlyModelViewSet
+    """ViewSet for tags - Full CRUD"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     lookup_field = 'slug'
-    permission_classes = [AllowAny]
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for managing posts (news, events, blog posts)
-    """
-    queryset = Post.objects.filter(status='published').select_related('author', 'category').prefetch_related('tags', 'comments')
+    """ViewSet for managing posts (news, events, blog posts)"""
+    queryset = Post.objects.all().select_related('author', 'category').prefetch_related('tags', 'comments')
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     lookup_field = 'slug'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['post_type', 'category', 'tags', 'is_featured']
+    filterset_fields = ['post_type', 'category', 'tags', 'is_featured', 'status']
     search_fields = ['title', 'excerpt', 'content']
     ordering_fields = ['published_at', 'views', 'created_at']
     ordering = ['-is_pinned', '-published_at']
@@ -63,6 +65,13 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
+        
+        # Admin can see all posts
+        if self.request.user.is_authenticated and self.request.user.is_staff:
+            return queryset
+        
+        # Public users only see published posts
+        queryset = queryset.filter(status='published')
         
         # Filter by post type from query params
         post_type = self.request.query_params.get('type', None)
@@ -106,47 +115,40 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(latest_posts, many=True)
         return Response(serializer.data)
     
-    @action(detail=False, methods=['get'], url_path='upcoming-events')
-    def upcoming_events(self, request):
-        """Get upcoming events"""
-        events = self.get_queryset().filter(
-            post_type='event',
-            event_date__gte=timezone.now()
-        ).order_by('event_date')[:20]
-        serializer = self.get_serializer(events, many=True)
-        return Response(serializer.data)
-    
-    @action(detail=False, methods=['get'], url_path='past-events')
-    def past_events(self, request):
-        """Get past events"""
-        events = self.get_queryset().filter(
-            post_type='event',
-            event_date__lt=timezone.now()
-        ).order_by('-event_date')[:20]
-        serializer = self.get_serializer(events, many=True)
-        return Response(serializer.data)
-    
-    @action(detail=True, methods=['get'])
-    def related(self, request, slug=None):
-        """Get related posts"""
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def publish(self, request, slug=None):
+        """Publish a post"""
         post = self.get_object()
-        related = Post.objects.filter(
-            Q(category=post.category) | Q(tags__in=post.tags.all()),
-            status='published'
-        ).exclude(id=post.id).distinct()[:5]
-        serializer = self.get_serializer(related, many=True)
-        return Response(serializer.data)
+        post.status = 'published'
+        if not post.published_at:
+            post.published_at = timezone.now()
+        post.save()
+        return Response({'message': 'Post published successfully'})
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def unpublish(self, request, slug=None):
+        """Unpublish a post"""
+        post = self.get_object()
+        post.status = 'draft'
+        post.save()
+        return Response({'message': 'Post unpublished successfully'})
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for managing comments
-    """
-    queryset = Comment.objects.filter(is_approved=True, parent=None).select_related('author', 'post')
+    """ViewSet for managing comments"""
+    queryset = Comment.objects.all().select_related('author', 'post')
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['post']
+    filterset_fields = ['post', 'is_approved']
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Admin sees all comments
+        if self.request.user.is_authenticated and self.request.user.is_staff:
+            return queryset
+        # Public sees only approved comments
+        return queryset.filter(is_approved=True, parent=None)
     
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
@@ -156,87 +158,43 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for contact messages
-    """
+    """ViewSet for contact messages"""
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
-    permission_classes = [AllowAny]
-    http_method_names = ['get', 'post']
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['inquiry_type', 'is_read', 'is_replied']
+    search_fields = ['name', 'email', 'subject', 'message']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
     
-    def get_permissions(self):
-        if self.action == 'list':
-            return [IsAuthenticated()]
-        return [AllowAny()]
+    @action(detail=True, methods=['post'])
+    def mark_read(self, request, pk=None):
+        """Mark message as read"""
+        message = self.get_object()
+        message.mark_as_read()
+        return Response({'message': 'Marked as read'})
     
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            {
-                'message': 'Your message has been sent successfully. We will get back to you soon.',
-                'data': serializer.data
-            },
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+    @action(detail=True, methods=['post'])
+    def mark_replied(self, request, pk=None):
+        """Mark message as replied"""
+        message = self.get_object()
+        message.mark_as_replied(request.user)
+        return Response({'message': 'Marked as replied'})
 
 
 class NewsletterViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for newsletter subscriptions
-    """
-    queryset = Newsletter.objects.filter(is_active=True)
+    """ViewSet for newsletter subscriptions"""
+    queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
-    permission_classes = [AllowAny]
-    http_method_names = ['get', 'post', 'delete']
-    
-    def get_permissions(self):
-        if self.action == 'list':
-            return [IsAuthenticated()]
-        return [AllowAny()]
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            {
-                'message': 'Successfully subscribed to newsletter!',
-                'data': serializer.data
-            },
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
-    
-    @action(detail=False, methods=['post'])
-    def unsubscribe(self, request):
-        """Unsubscribe from newsletter"""
-        email = request.data.get('email')
-        if not email:
-            return Response(
-                {'error': 'Email is required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        try:
-            subscriber = Newsletter.objects.get(email=email, is_active=True)
-            subscriber.unsubscribe()
-            return Response({'message': 'Successfully unsubscribed from newsletter'})
-        except Newsletter.DoesNotExist:
-            return Response(
-                {'error': 'Email not found in our subscription list'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['email', 'name']
+    ordering = ['-subscribed_at']
 
 
 class ContactMessageCreateView(generics.CreateAPIView):
-    """
-    API endpoint for creating contact messages (public)
-    """
+    """Public endpoint for creating contact messages"""
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
     permission_classes = [AllowAny]
@@ -245,21 +203,14 @@ class ContactMessageCreateView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         return Response(
-            {
-                'message': 'Your message has been sent successfully. We will get back to you soon.',
-                'data': serializer.data
-            },
-            status=status.HTTP_201_CREATED,
-            headers=headers
+            {'message': 'Your message has been sent successfully.'},
+            status=status.HTTP_201_CREATED
         )
 
 
 class NewsletterSubscribeView(generics.CreateAPIView):
-    """
-    API endpoint for newsletter subscriptions (public)
-    """
+    """Public endpoint for newsletter subscriptions"""
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
     permission_classes = [AllowAny]
@@ -268,12 +219,46 @@ class NewsletterSubscribeView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
         return Response(
-            {
-                'message': 'Successfully subscribed to newsletter!',
-                'data': serializer.data
-            },
-            status=status.HTTP_201_CREATED,
-            headers=headers
+            {'message': 'Successfully subscribed to newsletter!'},
+            status=status.HTTP_201_CREATED
         )
+class ContactMessageViewSet(viewsets.ModelViewSet):
+    """ViewSet for contact messages"""
+    queryset = ContactMessage.objects.all()
+    serializer_class = ContactMessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['inquiry_type', 'is_read', 'is_replied']
+    search_fields = ['name', 'email', 'subject', 'message']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
+    
+    @action(detail=True, methods=['post'])
+    def mark_read(self, request, pk=None):
+        """Mark message as read"""
+        message = self.get_object()
+        message.mark_as_read()
+        serializer = self.get_serializer(message)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def mark_replied(self, request, pk=None):
+        """Mark message as replied"""
+        message = self.get_object()
+        notes = request.data.get('notes', '')
+        if notes:
+            message.notes = notes
+        message.mark_as_replied(request.user)
+        serializer = self.get_serializer(message)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['patch'])
+    def update_notes(self, request, pk=None):
+        """Update internal notes"""
+        message = self.get_object()
+        notes = request.data.get('notes', '')
+        message.notes = notes
+        message.save(update_fields=['notes'])
+        serializer = self.get_serializer(message)
+        return Response(serializer.data)

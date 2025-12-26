@@ -1,0 +1,361 @@
+/* ============================================
+   Post Editor Page
+   ============================================ */
+   .post-editor {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  
+  /* Header */
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  
+  .editor-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .editor-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+  }
+  
+  .editor-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .btn-cancel,
+  .btn-save,
+  .btn-publish {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-cancel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+  }
+  
+  .btn-cancel:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  
+  .btn-save {
+    background: #3b82f6;
+    color: white;
+  }
+  
+  .btn-save:hover:not(:disabled) {
+    background: #2563eb;
+  }
+  
+  .btn-publish {
+    background: #10b981;
+    color: white;
+  }
+  
+  .btn-publish:hover:not(:disabled) {
+    background: #059669;
+  }
+  
+  .btn-save:disabled,
+  .btn-publish:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Form Grid */
+  .editor-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+  }
+  
+  /* Main Content */
+  .editor-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .input-title {
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  
+  .input-title:focus,
+  .input-excerpt:focus,
+  .input-content:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+  
+  .input-excerpt,
+  .input-content {
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.7;
+    resize: vertical;
+    font-family: inherit;
+  }
+  
+  .char-count {
+    align-self: flex-end;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+  }
+  
+  /* Event Fields */
+  .event-fields,
+  .seo-section {
+    padding: 1.5rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+  }
+  
+  .event-fields h3,
+  .seo-section h3 {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .event-fields input,
+  .seo-section input,
+  .seo-section textarea {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+  }
+  
+  /* Sidebar */
+  .editor-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .sidebar-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  
+  .sidebar-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+  
+  .select-full {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    cursor: pointer;
+  }
+  
+  /* Tags */
+  .tags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .tag-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .tag-checkbox:hover {
+    background: #f8fafc;
+  }
+  
+  .tag-checkbox input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  /* Image Upload */
+  .image-preview {
+    width: 100%;
+    padding-bottom: 60%;
+    position: relative;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  .image-preview img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .file-label {
+    display: block;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0.75rem;
+  }
+  
+  .file-label:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  
+  .input-caption {
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+  }
+  
+  /* Checkboxes */
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .checkbox-label:hover {
+    background: #f8fafc;
+  }
+  
+  .checkbox-label input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  
+  .checkbox-label span {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #0f172a;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .editor-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .editor-sidebar {
+      order: -1;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .post-editor {
+      padding: 1.5rem;
+    }
+  
+    .editor-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .editor-actions {
+      width: 100%;
+      flex-direction: column;
+    }
+  
+    .btn-cancel,
+    .btn-save,
+    .btn-publish {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
