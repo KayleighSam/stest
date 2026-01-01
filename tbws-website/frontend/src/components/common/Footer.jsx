@@ -1,13 +1,77 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { 
   Facebook, Twitter, Instagram, Youtube, 
-  Mail, Phone, MapPin, ArrowRight, Send
+  Mail, Phone, MapPin, Send, Check, AlertCircle
 } from 'lucide-react';
+import { contentService } from '../../api/content';
+import toast from 'react-hot-toast';
 import './Footer.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  // Newsletter subscription mutation
+  const subscribeMutation = useMutation({
+    mutationFn: contentService.subscribeNewsletter,
+    onSuccess: () => {
+      setSubscribed(true);
+      setEmail('');
+      toast.success('Successfully subscribed to newsletter!', {
+        duration: 4000,
+        icon: '✅',
+      });
+      setTimeout(() => setSubscribed(false), 3000);
+    },
+    onError: (error) => {
+      console.error('Newsletter subscription error:', error);
+      
+      // Handle different error responses
+      let message = 'Failed to subscribe. Please try again.';
+      
+      if (error.response?.data) {
+        if (error.response.data.email) {
+          message = Array.isArray(error.response.data.email) 
+            ? error.response.data.email[0] 
+            : error.response.data.email;
+        } else if (error.response.data.detail) {
+          message = error.response.data.detail;
+        } else if (error.response.data.message) {
+          message = error.response.data.message;
+        }
+      }
+      
+      toast.error(message, {
+        duration: 4000,
+        icon: '❌',
+      });
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!email.trim()) {
+      toast.error('Please enter your email', {
+        icon: <AlertCircle size={20} />,
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address', {
+        icon: <AlertCircle size={20} />,
+      });
+      return;
+    }
+
+    subscribeMutation.mutate({ email: email.trim() });
+  };
 
   const quickLinks = [
     { path: '/about', label: 'About Us' },
@@ -23,13 +87,6 @@ const Footer = () => {
     { path: '/gallery', label: 'Photo Gallery' },
   ];
 
-  const resources = [
-    { path: '/blog', label: 'News & Blog' },
-    { path: '/faq', label: 'FAQ' },
-    { path: '/contact', label: 'Contact Us' },
-    { path: '/privacy', label: 'Privacy Policy' },
-  ];
-
   return (
     <footer className="footer-modern">
       {/* Newsletter Section */}
@@ -40,17 +97,38 @@ const Footer = () => {
               <h3>Stay Updated</h3>
               <p>Subscribe to our newsletter for the latest news and updates</p>
             </div>
-            <form className="newsletter-form">
+            <form onSubmit={handleSubmit} className="newsletter-form">
               <div className="newsletter-input-wrapper">
                 <Mail size={20} className="newsletter-icon" />
                 <input
                   type="email"
                   placeholder="Enter your email"
                   className="newsletter-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={subscribeMutation.isPending || subscribed}
                 />
-                <button type="submit" className="newsletter-btn">
-                  <Send size={20} />
-                  <span>Subscribe</span>
+                <button 
+                  type="submit" 
+                  className="newsletter-btn"
+                  disabled={subscribeMutation.isPending || subscribed}
+                >
+                  {subscribeMutation.isPending ? (
+                    <>
+                      <div className="spinner-newsletter"></div>
+                      <span>Subscribing...</span>
+                    </>
+                  ) : subscribed ? (
+                    <>
+                      <Check size={20} />
+                      <span>Subscribed!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      <span>Subscribe</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -127,7 +205,6 @@ const Footer = () => {
                 {quickLinks.map((link) => (
                   <li key={link.path}>
                     <Link to={link.path} className="footer-link-modern">
-                      <ArrowRight size={14} />
                       <span>{link.label}</span>
                     </Link>
                   </li>
@@ -142,7 +219,6 @@ const Footer = () => {
                 {programs.map((link) => (
                   <li key={link.path}>
                     <Link to={link.path} className="footer-link-modern">
-                      <ArrowRight size={14} />
                       <span>{link.label}</span>
                     </Link>
                   </li>

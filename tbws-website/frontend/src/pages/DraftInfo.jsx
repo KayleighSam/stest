@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Clipboard, CheckCircle2, Calendar, Users, ChevronRight, Clock } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import { formatDateTime, getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -11,13 +11,25 @@ import './DraftInfo.css';
 const DraftInfo = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['draft-info'],
-    queryFn: () => pagesAPI.getDraftInfo(),
+    queryFn: async () => {
+      try {
+        console.log('📤 DraftInfo: Fetching draft info...');
+        const response = await pagesService.getCurrentDraftInfo();
+        console.log('✅ DraftInfo: Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ DraftInfo: Error:', error);
+        throw error;
+      }
+    },
   });
 
   if (isLoading) return <Loading fullScreen />;
   if (error) return <ErrorMessage message="Failed to load draft information" />;
 
-  const draftInfo = data?.data || data;
+  const draftInfo = Array.isArray(data) ? data[0] : data;
+
+  console.log('📊 Draft Info Data:', draftInfo);
 
   return (
     <div className="draft-info-page-pro">

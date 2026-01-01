@@ -243,3 +243,20 @@
       padding: 1rem;
     }
   }
+  /* Add to existing AdminLayout.css */
+
+.admin-nav-section {
+    padding: 1rem 1.5rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 1rem;
+    border-top: 1px solid #1e293b;
+  }
+  
+  .admin-nav-section:first-child {
+    margin-top: 0;
+    border-top: none;
+  }

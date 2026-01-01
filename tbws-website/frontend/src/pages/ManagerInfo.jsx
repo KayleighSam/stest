@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Users, ClipboardList, Award, Mail, Phone, ChevronRight, CheckCircle, Target } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import { pagesService } from '../api/pages';
 import { getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -11,12 +11,12 @@ import './ManagerInfo.css';
 const ManagerInfo = () => {
   const { data: infoData, isLoading: infoLoading, error: infoError } = useQuery({
     queryKey: ['manager-info'],
-    queryFn: () => pagesAPI.getManagerInfo(),
+    queryFn: () => pagesService.getManagerInfo(),
   });
 
   const { data: managersData, isLoading: managersLoading } = useQuery({
     queryKey: ['managers'],
-    queryFn: () => pagesAPI.getManagers(),
+    queryFn: () => pagesService.getManagers(),
   });
 
   if (infoLoading || managersLoading) return <Loading fullScreen />;

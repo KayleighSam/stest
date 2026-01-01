@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Calendar, Award, Star, Zap, TrendingUp } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import { getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -11,15 +11,29 @@ import './History.css';
 const History = () => {
   const { data: timelineData, isLoading, error } = useQuery({
     queryKey: ['history-timeline'],
-    queryFn: pagesAPI.getHistory,
+    queryFn: async () => {
+      try {
+        console.log('📤 History: Fetching timeline...');
+        const response = await pagesService.getHistoryTimeline();
+        console.log('✅ History: Timeline Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ History: Timeline Error:', error);
+        throw error;
+      }
+    },
   });
 
   if (isLoading) return <Loading fullScreen />;
   if (error) return <ErrorMessage message="Failed to load history" />;
 
   // Handle both wrapped and unwrapped responses
-  const rawData = timelineData?.data || timelineData;
-  const timeline = rawData?.results || rawData?.data || rawData || [];
+  const rawData = timelineData;
+  const timeline = Array.isArray(rawData) 
+    ? rawData 
+    : rawData?.results || rawData?.data || [];
+
+  console.log('📊 History Timeline Data:', timeline);
 
   // Get milestone icon based on index
   const getMilestoneIcon = (index) => {

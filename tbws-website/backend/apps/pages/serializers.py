@@ -16,7 +16,9 @@ class PageSerializer(serializers.ModelSerializer):
             'content',
             'hero_image',
             'featured_image',
+            'status',
             'meta_description',
+            'meta_keywords',
             'created_at',
             'updated_at'
         ]
@@ -32,7 +34,9 @@ class CoreValueSerializer(serializers.ModelSerializer):
             'icon',
             'color_start',
             'color_end',
-            'order'
+            'order',
+            'is_active',
+            'created_at',
         ]
 
 
@@ -40,6 +44,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = [
+            'id',
             'site_name',
             'tagline',
             'description',
@@ -60,6 +65,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             'youtube_url',
             'logo',
             'favicon',
+            'meta_description',
+            'meta_keywords',
         ]
 
 
@@ -81,7 +88,10 @@ class TeamMemberSerializer(serializers.ModelSerializer):
             'facebook_url',
             'twitter_url',
             'linkedin_url',
-            'order'
+            'order',
+            'is_active',
+            'joined_date',
+            'created_at',
         ]
 
 
@@ -93,7 +103,10 @@ class FAQSerializer(serializers.ModelSerializer):
             'question',
             'answer',
             'category',
-            'order'
+            'order',
+            'is_active',
+            'created_at',
+            'updated_at',
         ]
 
 
@@ -107,11 +120,14 @@ class HistoryTimelineSerializer(serializers.ModelSerializer):
             'description',
             'image',
             'is_milestone',
-            'order'
+            'order',
+            'created_at',
         ]
 
 
 class SponsorSerializer(serializers.ModelSerializer):
+    tier_display = serializers.CharField(source='get_tier_display', read_only=True)
+    
     class Meta:
         model = Sponsor
         fields = [
@@ -120,11 +136,15 @@ class SponsorSerializer(serializers.ModelSerializer):
             'logo',
             'website_url',
             'tier',
+            'tier_display',
             'description',
-            'order'
+            'order',
+            'is_active',
+            'started_date',
+            'created_at',
         ]
 
-# Serializers for League Rules, Venues, Draft Info, Manager Info, and Managers
+
 class LeagueRuleSerializer(serializers.ModelSerializer):
     category_display = serializers.CharField(source='get_category_display', read_only=True)
     
@@ -136,7 +156,10 @@ class LeagueRuleSerializer(serializers.ModelSerializer):
             'category_display',
             'title',
             'content',
-            'order'
+            'order',
+            'is_active',
+            'created_at',
+            'updated_at',
         ]
 
 
@@ -154,13 +177,17 @@ class VenueSerializer(serializers.ModelSerializer):
             'facilities',
             'capacity',
             'featured_image',
+            'gallery_images',
             'latitude',
             'longitude',
             'map_embed_code',
             'phone',
             'email',
             'website',
-            'is_primary'
+            'is_active',
+            'is_primary',
+            'order',
+            'created_at',
         ]
 
 
@@ -168,6 +195,7 @@ class DraftInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DraftInfo
         fields = [
+            'id',
             'title',
             'overview',
             'eligibility_title',
@@ -182,7 +210,8 @@ class DraftInfoSerializer(serializers.ModelSerializer):
             'faq_content',
             'registration_deadline',
             'draft_date',
-            'featured_image'
+            'featured_image',
+            'updated_at',
         ]
 
 
@@ -190,6 +219,7 @@ class ManagerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ManagerInfo
         fields = [
+            'id',
             'title',
             'overview',
             'responsibilities_title',
@@ -201,7 +231,8 @@ class ManagerInfoSerializer(serializers.ModelSerializer):
             'how_to_become_title',
             'how_to_become_content',
             'contact_email',
-            'contact_phone'
+            'contact_phone',
+            'updated_at',
         ]
 
 
@@ -220,6 +251,8 @@ class ManagerSerializer(serializers.ModelSerializer):
             'twitter_url',
             'linkedin_url',
             'years_experience',
+            'is_active',
+            'order',
             'joined_date',
-            'order'
+            'created_at',
         ]

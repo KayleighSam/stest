@@ -3,18 +3,30 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, Shield, Users, Calendar } from 'lucide-react';
-import { pagesAPI } from '../../api/pages';
+import pagesService from '../../api/pages';
 import { getImageUrl } from '../../utils/formatters';
 import './Hero.css';
 
 const Hero = () => {
-  const { data: settingsData } = useQuery({
-    queryKey: ['site-settings'],
-    queryFn: () => pagesAPI.getSiteSettings(),
-    staleTime: 1000 * 60 * 30,
+  // ✅ FIXED - Fetch site settings correctly
+  const { data: settingsData, isLoading } = useQuery({
+    queryKey: ['public-site-settings'],
+    queryFn: async () => {
+      try {
+        console.log('📤 Hero: Fetching site settings...');
+        const response = await pagesService.getCurrentSettings();
+        console.log('✅ Hero: Settings Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ Hero: Settings Error:', error);
+        // Return default values if fetch fails
+        return null;
+      }
+    },
+    staleTime: 1000 * 60 * 30, // Cache for 30 minutes
   });
 
-  const settings = settingsData?.data || settingsData;
+  const settings = settingsData;
 
   const quickLinks = [
     { icon: <Calendar size={20} />, label: 'Upcoming Events', path: '/events' },
@@ -61,8 +73,12 @@ const Hero = () => {
 
             {/* Main Heading */}
             <h1 className="hero-title-modern">
-              <span className="title-line-1">TUSKER BASKETBALL</span>
-              <span className="title-line-2">WELFARE SOCIETY</span>
+              <span className="title-line-1">
+                {settings?.site_name?.split(' ').slice(0, 2).join(' ').toUpperCase() || 'TUSKER BASKETBALL'}
+              </span>
+              <span className="title-line-2">
+                {settings?.site_name?.split(' ').slice(2).join(' ').toUpperCase() || 'WELFARE SOCIETY'}
+              </span>
             </h1>
 
             {/* Tagline */}

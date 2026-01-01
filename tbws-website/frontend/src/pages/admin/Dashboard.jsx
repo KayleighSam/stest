@@ -7,19 +7,29 @@ import {
   Calendar,
   Image,
   Mail,
-  Folder,
   Eye,
   ArrowRight,
   Star,
   Clock,
   X,
-  Send,
   Phone,
-  MessageSquare,
-  Bell,
+  MessageCircle,
+  Send,
+  Users,
+  CheckCircle,
+  TrendingUp,
+  Activity,
+  Zap,
+  Award,
+  Target,
+  Sparkles,
+  Shield,
+  Settings,
+  BarChart3,
 } from 'lucide-react';
 import { contentService } from '../../api/content';
 import { galleryService } from '../../api/gallery';
+import usersService from '../../api/users';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import './Dashboard.css';
 
@@ -27,7 +37,7 @@ const Dashboard = () => {
   const { user } = useAdminAuth();
   const [showMessagesModal, setShowMessagesModal] = useState(false);
 
-  // Fetch all data
+  // Fetch content data
   const { data: postsData } = useQuery({
     queryKey: ['dashboard-posts'],
     queryFn: async () => {
@@ -76,12 +86,49 @@ const Dashboard = () => {
     },
   });
 
+  const { data: commentsData } = useQuery({
+    queryKey: ['dashboard-comments'],
+    queryFn: async () => {
+      const response = await contentService.getComments();
+      return response.data;
+    },
+  });
+
+  const { data: subscribersData } = useQuery({
+    queryKey: ['dashboard-subscribers'],
+    queryFn: async () => {
+      const response = await contentService.getSubscribers();
+      return response.data;
+    },
+  });
+
+  // Fetch user management data
+  const { data: usersData } = useQuery({
+    queryKey: ['dashboard-users'],
+    queryFn: async () => {
+      const response = await usersService.getUsers();
+      return response.data;
+    },
+  });
+
+  const { data: playersData } = useQuery({
+    queryKey: ['dashboard-players'],
+    queryFn: async () => {
+      const response = await usersService.getPlayers();
+      return response.data;
+    },
+  });
+
   const posts = postsData?.results || postsData || [];
   const events = eventsData?.results || eventsData || [];
   const messages = messagesData?.results || messagesData || [];
   const categories = categoriesData?.results || categoriesData || [];
   const albums = albumsData?.results || albumsData || [];
   const images = imagesData?.results || imagesData || [];
+  const comments = commentsData?.results || commentsData || [];
+  const subscribers = subscribersData?.results || subscribersData || [];
+  const users = Array.isArray(usersData) ? usersData : usersData?.results || [];
+  const players = Array.isArray(playersData) ? playersData : playersData?.results || [];
 
   // Calculate statistics
   const stats = {
@@ -98,6 +145,14 @@ const Dashboard = () => {
     totalAlbums: albums.length,
     totalImages: images.length,
     featuredPosts: posts.filter((p) => p.is_featured).length,
+    totalComments: comments.length,
+    pendingComments: comments.filter((c) => !c.is_approved).length,
+    totalSubscribers: subscribers.length,
+    activeSubscribers: subscribers.filter((s) => s.is_active).length,
+    totalUsers: users.length,
+    activeUsers: users.filter((u) => u.is_active).length,
+    totalPlayers: players.length,
+    activePlayers: players.filter((p) => p.status === 'active').length,
   };
 
   // Recent posts
@@ -118,165 +173,253 @@ const Dashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      {/* Welcome Header */}
-      <div className="dashboard-welcome">
-        <div className="welcome-content">
-          <h1 className="dashboard-title">
-            Welcome back, {user?.first_name || 'Admin'}! 👋
+      {/* Animated Background */}
+      <div className="dashboard-background">
+        <div className="gradient-orb orb-1"></div>
+        <div className="gradient-orb orb-2"></div>
+        <div className="gradient-orb orb-3"></div>
+      </div>
+
+      {/* Hero Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="dashboard-hero"
+      >
+        <div className="hero-content">
+          <div className="hero-badge">
+            <Sparkles size={16} />
+            <span>Dashboard Overview</span>
+          </div>
+          <h1 className="hero-title">
+            Welcome back, <span className="highlight">{user?.first_name || 'Admin'}</span>! 🏀
           </h1>
-          <p className="dashboard-subtitle">
-            Here's what's happening with your basketball league today
+          <p className="hero-subtitle">
+            Here's your TBWS command center. Let's make today amazing.
           </p>
         </div>
-        <div className="dashboard-header-actions">
+        <div className="hero-actions">
           <div className="dashboard-date">
             <Clock size={18} />
             <span>
               {new Date().toLocaleDateString('en-US', {
-                weekday: 'short',
-                month: 'short',
+                weekday: 'long',
+                month: 'long',
                 day: 'numeric',
               })}
             </span>
           </div>
-          
-          {/* Messages Notification Button */}
           <button
             onClick={() => setShowMessagesModal(true)}
             className="messages-notification-btn"
           >
             <Mail size={20} />
             {stats.unreadMessages > 0 && (
-              <span className="notification-badge">{stats.unreadMessages}</span>
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="notification-badge pulse"
+              >
+                {stats.unreadMessages}
+              </motion.span>
             )}
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Stats Grid */}
-      <div className="stats-grid">
-        <StatCard
+      {/* Premium Stats Grid */}
+      <div className="premium-stats-grid">
+        <PremiumStatCard
           title="Total Posts"
           value={stats.totalPosts}
-          subtitle={`${stats.publishedPosts} published, ${stats.draftPosts} drafts`}
+          subtitle={`${stats.publishedPosts} live • ${stats.draftPosts} drafts`}
           icon={FileText}
-          color="#3b82f6"
+          gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
           link="/admin/posts"
+          trend="+12%"
         />
-        <StatCard
+        <PremiumStatCard
           title="Events"
           value={stats.totalEvents}
-          subtitle={`${stats.upcomingEvents} upcoming events`}
+          subtitle={`${stats.upcomingEvents} upcoming`}
           icon={Calendar}
-          color="#8b5cf6"
+          gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
           link="/admin/events"
+          trend="+8%"
         />
-        <StatCard
+        <PremiumStatCard
           title="Messages"
           value={stats.totalMessages}
-          subtitle={`${stats.unreadMessages} unread messages`}
+          subtitle={`${stats.unreadMessages} unread`}
           icon={Mail}
-          color="#ef4444"
+          gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
           link="/admin/messages"
-          badge={stats.unreadMessages > 0 ? stats.unreadMessages : null}
+          badge={stats.unreadMessages}
         />
-        <StatCard
+        <PremiumStatCard
           title="Gallery"
           value={stats.totalImages}
-          subtitle={`${stats.totalAlbums} albums created`}
+          subtitle={`${stats.totalAlbums} albums`}
           icon={Image}
-          color="#10b981"
+          gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
           link="/admin/gallery"
+        />
+        <PremiumStatCard
+          title="Users"
+          value={stats.totalUsers}
+          subtitle={`${stats.activeUsers} active`}
+          icon={Users}
+          gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+          link="/admin/settings"
+        />
+        <PremiumStatCard
+          title="Players"
+          value={stats.totalPlayers}
+          subtitle={`${stats.activePlayers} playing`}
+          icon={Shield}
+          gradient="linear-gradient(135deg, #30cfd0 0%, #330867 100%)"
+          link="/admin/players"
+        />
+        <PremiumStatCard
+          title="Comments"
+          value={stats.totalComments}
+          subtitle={`${stats.pendingComments} pending`}
+          icon={MessageCircle}
+          gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+          link="/admin/comments"
+          badge={stats.pendingComments}
+        />
+        <PremiumStatCard
+          title="Newsletter"
+          value={stats.totalSubscribers}
+          subtitle={`${stats.activeSubscribers} subscribed`}
+          icon={Send}
+          gradient="linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
+          link="/admin/newsletter"
         />
       </div>
 
-      {/* Content Grid */}
-      <div className="dashboard-content-grid">
-        {/* Recent Posts */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h2 className="card-title">
-              <FileText size={20} />
-              Recent Posts
-            </h2>
-            <Link to="/admin/posts" className="view-all-link">
+      {/* Content Dashboard */}
+      <div className="content-dashboard">
+        {/* Recent Activity */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card activity-card"
+        >
+          <div className="card-header-modern">
+            <div className="card-title-group">
+              <Activity size={24} className="card-icon" />
+              <div>
+                <h2 className="card-title-modern">Recent Posts</h2>
+                <p className="card-subtitle-modern">{stats.totalPosts} total articles</p>
+              </div>
+            </div>
+            <Link to="/admin/posts" className="view-all-modern">
               View All <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="card-body">
+          <div className="card-body-modern">
             {recentPosts.length === 0 ? (
-              <div className="empty-state-small">
+              <div className="empty-state-modern">
                 <FileText size={48} />
-                <p>No posts yet</p>
-                <Link to="/admin/posts/create" className="btn-create-small">
+                <h3>No posts yet</h3>
+                <p>Start creating amazing content</p>
+                <Link to="/admin/posts/create" className="btn-create-modern">
+                  <Zap size={16} />
                   Create Post
                 </Link>
               </div>
             ) : (
-              <div className="posts-list">
-                {recentPosts.map((post) => (
-                  <Link
+              <div className="posts-modern-list">
+                {recentPosts.map((post, index) => (
+                  <motion.div
                     key={post.id}
-                    to={`/admin/posts/edit/${post.slug}`}
-                    className="post-item"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
                   >
-                    <div className="post-item-content">
-                      <h4>{post.title}</h4>
-                      <div className="post-item-meta">
-                        <span className={`status-dot ${post.status}`}></span>
-                        <span>{post.status}</span>
-                        <span>•</span>
-                        <span>
-                          {new Date(post.created_at).toLocaleDateString()}
-                        </span>
-                        {post.is_featured && (
-                          <>
-                            <span>•</span>
-                            <Star size={12} className="featured-icon" />
-                          </>
-                        )}
+                    <Link to={`/admin/posts/edit/${post.slug}`} className="post-modern-item">
+                      <div className="post-modern-content">
+                        <div className="post-modern-header">
+                          <h4>{post.title}</h4>
+                          <div className="post-badges">
+                            <span className={`status-badge ${post.status}`}>
+                              {post.status}
+                            </span>
+                            {post.is_featured && (
+                              <span className="featured-badge">
+                                <Star size={12} />
+                                Featured
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="post-modern-meta">
+                          <span className="meta-item">
+                            <Eye size={14} />
+                            {post.views || 0} views
+                          </span>
+                          <span className="meta-item">
+                            <MessageCircle size={14} />
+                            {post.comment_count || 0} comments
+                          </span>
+                          <span className="meta-item">
+                            <Clock size={14} />
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="post-item-stats">
-                      <Eye size={14} />
-                      {post.views || 0}
-                    </div>
-                  </Link>
+                      <ArrowRight size={18} className="post-arrow" />
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Upcoming Events */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h2 className="card-title">
-              <Calendar size={20} />
-              Upcoming Events
-            </h2>
-            <Link to="/admin/events" className="view-all-link">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-card events-card"
+        >
+          <div className="card-header-modern">
+            <div className="card-title-group">
+              <Calendar size={24} className="card-icon" />
+              <div>
+                <h2 className="card-title-modern">Upcoming Events</h2>
+                <p className="card-subtitle-modern">{stats.upcomingEvents} scheduled</p>
+              </div>
+            </div>
+            <Link to="/admin/events" className="view-all-modern">
               View All <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="card-body">
+          <div className="card-body-modern">
             {upcomingEvents.length === 0 ? (
-              <div className="empty-state-small">
+              <div className="empty-state-modern">
                 <Calendar size={48} />
-                <p>No upcoming events</p>
-                <Link to="/admin/events" className="btn-create-small">
+                <h3>No upcoming events</h3>
+                <p>Schedule your next big game</p>
+                <Link to="/admin/events" className="btn-create-modern">
+                  <Zap size={16} />
                   Create Event
                 </Link>
               </div>
             ) : (
-              <div className="events-list">
-                {upcomingEvents.map((event) => (
-                  <Link
+              <div className="events-modern-list">
+                {upcomingEvents.map((event, index) => (
+                  <motion.div
                     key={event.id}
-                    to={`/admin/events`}
-                    className="event-item"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="event-modern-item"
                   >
-                    <div className="event-date-badge">
+                    <div className="event-date-modern">
                       <span className="event-month">
                         {new Date(event.event_date).toLocaleString('default', {
                           month: 'short',
@@ -286,52 +429,134 @@ const Dashboard = () => {
                         {new Date(event.event_date).getDate()}
                       </span>
                     </div>
-                    <div className="event-item-content">
+                    <div className="event-modern-content">
                       <h4>{event.title}</h4>
-                      <p className="event-location">{event.event_location}</p>
+                      <p className="event-location-modern">
+                        📍 {event.event_location}
+                      </p>
                     </div>
-                  </Link>
+                  </motion.div>
                 ))}
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
+
+        {/* Analytics Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-card analytics-card"
+        >
+          <div className="card-header-modern">
+            <div className="card-title-group">
+              <BarChart3 size={24} className="card-icon" />
+              <div>
+                <h2 className="card-title-modern">Quick Analytics</h2>
+                <p className="card-subtitle-modern">At a glance</p>
+              </div>
+            </div>
+          </div>
+          <div className="card-body-modern">
+            <div className="analytics-grid">
+              <div className="analytics-item">
+                <div className="analytics-icon">
+                  <TrendingUp size={20} />
+                </div>
+                <div className="analytics-content">
+                  <span className="analytics-value">{stats.publishedPosts}</span>
+                  <span className="analytics-label">Published</span>
+                </div>
+              </div>
+              <div className="analytics-item">
+                <div className="analytics-icon">
+                  <Star size={20} />
+                </div>
+                <div className="analytics-content">
+                  <span className="analytics-value">{stats.featuredPosts}</span>
+                  <span className="analytics-label">Featured</span>
+                </div>
+              </div>
+              <div className="analytics-item">
+                <div className="analytics-icon">
+                  <Target size={20} />
+                </div>
+                <div className="analytics-content">
+                  <span className="analytics-value">{stats.totalCategories}</span>
+                  <span className="analytics-label">Categories</span>
+                </div>
+              </div>
+              <div className="analytics-item">
+                <div className="analytics-icon">
+                  <Award size={20} />
+                </div>
+                <div className="analytics-content">
+                  <span className="analytics-value">{stats.totalAlbums}</span>
+                  <span className="analytics-label">Albums</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Quick Actions */}
-      <div className="quick-actions">
-        <h2 className="section-title">Quick Actions</h2>
-        <div className="actions-grid">
-          <QuickActionCard
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="quick-actions-section"
+      >
+        <h2 className="section-title-modern">
+          <Zap size={24} />
+          Quick Actions
+        </h2>
+        <div className="quick-actions-grid">
+          <QuickActionModern
             title="Create Post"
-            description="Write a new blog post or article"
+            description="Write new content"
             icon={FileText}
             link="/admin/posts/create"
-            color="#3b82f6"
+            gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
           />
-          <QuickActionCard
-            title="Create Event"
-            description="Add a new basketball event"
+          <QuickActionModern
+            title="Add Event"
+            description="Schedule an event"
             icon={Calendar}
             link="/admin/events"
-            color="#8b5cf6"
+            gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
           />
-          <QuickActionCard
+          <QuickActionModern
             title="Upload Photos"
-            description="Add images to gallery"
+            description="Add to gallery"
             icon={Image}
             link="/admin/gallery"
-            color="#10b981"
+            gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
           />
-          <QuickActionCard
-            title="Manage Categories"
-            description="Organize your content"
-            icon={Folder}
-            link="/admin/categories"
-            color="#f59e0b"
+          <QuickActionModern
+            title="Manage Users"
+            description="User settings"
+            icon={Users}
+            link="/admin/settings"
+            gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+          />
+          <QuickActionModern
+            title="Players"
+            description="Manage players"
+            icon={Shield}
+            link="/admin/players"
+            gradient="linear-gradient(135deg, #30cfd0 0%, #330867 100%)"
+          />
+          <QuickActionModern
+            title="Settings"
+            description="Site configuration"
+            icon={Settings}
+            link="/admin/site-settings"
+            gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Messages Modal */}
       <AnimatePresence>
@@ -347,54 +572,69 @@ const Dashboard = () => {
   );
 };
 
-// Stat Card Component
-const StatCard = ({ title, value, subtitle, icon: Icon, color, link, badge }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    whileHover={{ y: -4 }}
-    className="stat-card"
-  >
-    <Link to={link} className="stat-card-link">
-      <div className="stat-card-icon" style={{ background: `${color}15`, color }}>
-        <Icon size={24} strokeWidth={1.5} />
-      </div>
-      <div className="stat-card-content">
-        <div className="stat-card-header">
-          <span className="stat-card-title">{title}</span>
-          {badge && (
-            <span className="stat-badge" style={{ background: color }}>
+// Premium Stat Card
+const PremiumStatCard = ({ title, value, subtitle, icon: Icon, gradient, link, badge, trend }) => (
+  <Link to={link}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.02, y: -4 }}
+      className="premium-stat-card"
+      style={{ background: gradient }}
+    >
+      <div className="premium-card-glow"></div>
+      <div className="premium-card-content">
+        <div className="premium-card-header">
+          <div className="premium-icon-wrapper">
+            <Icon size={24} strokeWidth={2} />
+          </div>
+          {badge > 0 && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="premium-badge pulse"
+            >
               {badge}
-            </span>
+            </motion.span>
           )}
         </div>
-        <div className="stat-card-value">{value}</div>
-        <div className="stat-card-subtitle">{subtitle}</div>
+        <div className="premium-card-body">
+          <h3 className="premium-value">{value}</h3>
+          <p className="premium-title">{title}</p>
+          <p className="premium-subtitle">{subtitle}</p>
+        </div>
+        {trend && (
+          <div className="premium-trend">
+            <TrendingUp size={14} />
+            <span>{trend}</span>
+          </div>
+        )}
       </div>
-    </Link>
-  </motion.div>
+    </motion.div>
+  </Link>
 );
 
-// Quick Action Card Component
-const QuickActionCard = ({ title, description, icon: Icon, link, color }) => (
-  <motion.div whileHover={{ y: -4 }} className="quick-action-wrapper">
-    <Link to={link} className="quick-action-card">
-      <div
-        className="quick-action-icon"
-        style={{ background: `${color}15`, color }}
-      >
-        <Icon size={24} strokeWidth={1.5} />
+// Quick Action Modern
+const QuickActionModern = ({ title, description, icon: Icon, link, gradient }) => (
+  <Link to={link}>
+    <motion.div
+      whileHover={{ scale: 1.02, y: -4 }}
+      className="quick-action-modern"
+    >
+      <div className="quick-action-glow" style={{ background: gradient }}></div>
+      <div className="quick-action-icon-modern" style={{ background: gradient }}>
+        <Icon size={24} strokeWidth={2} />
       </div>
-      <div className="quick-action-content">
+      <div className="quick-action-content-modern">
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      <ArrowRight size={20} className="quick-action-arrow" style={{ color }} />
-    </Link>
-  </motion.div>
+      <ArrowRight size={20} className="quick-action-arrow-modern" />
+    </motion.div>
+  </Link>
 );
 
-// Messages Modal Component
+// Messages Modal (Keep the same as before)
 const MessagesModal = ({ messages, unreadCount, onClose }) => {
   return (
     <motion.div

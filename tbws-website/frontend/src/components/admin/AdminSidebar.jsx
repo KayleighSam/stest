@@ -14,6 +14,14 @@ import {
   X,
   Image,
   Mail,
+  Send,
+  FileCode,
+  Award,
+  HelpCircle,
+  History,
+  DollarSign,
+  Briefcase,
+  FileSignature,
 } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import toast from 'react-hot-toast';
@@ -44,6 +52,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       path: '/admin/messages',
     },
     {
+      title: 'Newsletter',
+      icon: Send,
+      path: '/admin/newsletter',
+    },
+    {
       title: 'Events',
       icon: Calendar,
       path: '/admin/events',
@@ -54,14 +67,47 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       path: '/admin/gallery',
     },
     {
-      title: 'Teams',
-      icon: Shield,
-      path: '/admin/teams',
+      section: 'Pages & Content',
     },
     {
-      title: 'Players',
+      title: 'Static Pages',
+      icon: FileCode,
+      path: '/admin/pages',
+    },
+    {
+      title: 'Site Settings',
+      icon: Settings,
+      path: '/admin/site-settings',
+    },
+    {
+      title: 'Core Values',
+      icon: Award,
+      path: '/admin/core-values',
+    },
+    {
+      title: 'Team Members',
       icon: Users,
-      path: '/admin/players',
+      path: '/admin/team',
+    },
+    {
+      title: 'FAQs',
+      icon: HelpCircle,
+      path: '/admin/faqs',
+    },
+    {
+      title: 'History Timeline',
+      icon: History,
+      path: '/admin/history',
+    },
+    {
+      title: 'Sponsors',
+      icon: DollarSign,
+      path: '/admin/sponsors',
+    },
+    {
+      title: 'League Rules',
+      icon: FileSignature,
+      path: '/admin/league-rules',
     },
     {
       title: 'Venues',
@@ -69,14 +115,27 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       path: '/admin/venues',
     },
     {
-      title: 'Users',
-      icon: UserCircle,
-      path: '/admin/users',
+      title: 'Draft Info',
+      icon: Briefcase,
+      path: '/admin/draft-info',
     },
     {
-      title: 'Settings',
+      title: 'Managers',
+      icon: UserCircle,
+      path: '/admin/manager-info',
+    },
+    {
+      section: 'User Management',
+    },
+    {
+      title: 'Settings & Users',
       icon: Settings,
       path: '/admin/settings',
+    },
+    {
+      title: 'Players',
+      icon: Shield,
+      path: '/admin/players',
     },
   ];
 
@@ -109,19 +168,28 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         </div>
 
         <nav className="admin-nav">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={onClose}
-              className={({ isActive }) =>
-                `admin-nav-item ${isActive ? 'admin-nav-active' : ''}`
-              }
-            >
-              <item.icon size={20} strokeWidth={1.5} />
-              <span>{item.title}</span>
-            </NavLink>
-          ))}
+          {menuItems.map((item, index) => {
+            if (item.section) {
+              return (
+                <div key={index} className="admin-nav-section">
+                  {item.section}
+                </div>
+              );
+            }
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `admin-nav-item ${isActive ? 'admin-nav-active' : ''}`
+                }
+              >
+                <item.icon size={20} strokeWidth={1.5} />
+                <span>{item.title}</span>
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="admin-sidebar-footer">

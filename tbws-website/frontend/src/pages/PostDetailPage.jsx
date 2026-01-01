@@ -5,14 +5,15 @@ import { motion } from 'framer-motion';
 import { 
   Calendar, 
   User, 
-  ArrowLeft, 
+  ArrowLeft,
   Clock,
+  Eye,
   Tag as TagIcon,
   Share2,
   Bookmark,
-  Eye,
 } from 'lucide-react';
 import { contentService } from '../api/content';
+import CommentSection from '../components/blog/CommentSection';
 import './PostDetailPage.css';
 
 const PostDetailPage = () => {
@@ -189,6 +190,11 @@ const PostDetailPage = () => {
                 <p className="author-role">Content Writer</p>
               </div>
             </div>
+
+            {/* Comments Section */}
+            {post.allow_comments && (
+              <CommentSection postSlug={slug} postId={post.id} />
+            )}
           </motion.article>
         </div>
       </section>

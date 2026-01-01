@@ -19,8 +19,12 @@ galleryAPI.interceptors.request.use((config) => {
   return config;
 });
 
+// Export the axios instance
+export { galleryAPI };
+
+// Gallery Service
 export const galleryService = {
-  // Albums - Full CRUD
+  // ==================== Albums - Full CRUD ====================
   getAlbums: (params) => galleryAPI.get('/gallery/albums/', { params }),
   getAlbum: (id) => galleryAPI.get(`/gallery/albums/${id}/`),
   createAlbum: (data) => {
@@ -48,7 +52,7 @@ export const galleryService = {
   deleteAlbum: (id) => galleryAPI.delete(`/gallery/albums/${id}/`),
   getFeaturedAlbums: () => galleryAPI.get('/gallery/albums/featured/'),
 
-  // Images - Full CRUD
+  // ==================== Images - Full CRUD ====================
   getImages: (params) => galleryAPI.get('/gallery/images/', { params }),
   getImage: (id) => galleryAPI.get(`/gallery/images/${id}/`),
   createImage: (data) => {
@@ -69,7 +73,7 @@ export const galleryService = {
   getFeaturedImages: () => galleryAPI.get('/gallery/images/featured/'),
   getRecentImages: () => galleryAPI.get('/gallery/images/recent/'),
 
-  // Upload multiple images
+  // ==================== Upload Multiple Images ====================
   uploadImages: async (files, albumId) => {
     const uploadPromises = files.map((file) => {
       const formData = new FormData();

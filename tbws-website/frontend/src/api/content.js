@@ -72,37 +72,12 @@ export const contentService = {
   unpublishPost: (slug) => contentAPI.post(`/content/posts/${slug}/unpublish/`),
   getFeaturedPosts: () => contentAPI.get('/content/posts/featured/'),
   getLatestPosts: () => contentAPI.get('/content/posts/latest/'),
-  
-  // ==================== Events (Post Type = Event) ====================
-  getUpcomingEvents: () => contentAPI.get('/content/posts/', { 
-    params: { 
-      post_type: 'event',
-      status: 'published',
-      ordering: 'event_date'
-    } 
-  }),
-  getPastEvents: () => contentAPI.get('/content/posts/', { 
-    params: { 
-      post_type: 'event',
-      status: 'published',
-      ordering: '-event_date'
-    } 
-  }),
-  getAllEvents: () => contentAPI.get('/content/posts/', {
-    params: {
-      post_type: 'event',
-      status: 'published'
-    }
-  }),
 
   // ==================== Contact Messages ====================
   getMessages: (params) => contentAPI.get('/content/contactmessage/', { params }),
   getMessage: (id) => contentAPI.get(`/content/contactmessage/${id}/`),
   markMessageRead: (id) => contentAPI.post(`/content/contactmessage/${id}/mark_read/`),
-  markMessageReplied: (id, notes = '') => 
-    contentAPI.post(`/content/contactmessage/${id}/mark_replied/`, { notes }),
-  updateMessageNotes: (id, notes) => 
-    contentAPI.patch(`/content/contactmessage/${id}/update_notes/`, { notes }),
+  markMessageReplied: (id) => contentAPI.post(`/content/contactmessage/${id}/mark_replied/`),
   deleteMessage: (id) => contentAPI.delete(`/content/contactmessage/${id}/`),
   
   // Public contact endpoint
@@ -122,11 +97,21 @@ export const contentService = {
   createComment: (data) => contentAPI.post('/content/comments/', data),
   updateComment: (id, data) => contentAPI.patch(`/content/comments/${id}/`, data),
   approveComment: (id) => contentAPI.patch(`/content/comments/${id}/`, { is_approved: true }),
-  deleteComment: (id) => contentAPI.delete(`/content/comments/${id}/`),
+    deleteComment: (id) => contentAPI.delete(`/content/comments/${id}/`),
+  
+    // ==================== Contact Messages ====================
+getMessages: (params) => contentAPI.get('/content/contactmessage/', { params }),
+getMessage: (id) => contentAPI.get(`/content/contactmessage/${id}/`),
+markMessageRead: (id) => contentAPI.post(`/content/contactmessage/${id}/mark_read/`),
+markMessageReplied: (id, notes = '') => 
+  contentAPI.post(`/content/contactmessage/${id}/mark_replied/`, { notes }),
+updateMessageNotes: (id, notes) => 
+  contentAPI.patch(`/content/contactmessage/${id}/update_notes/`, { notes }),
+deleteMessage: (id) => contentAPI.delete(`/content/contactmessage/${id}/`),
+
+// Public contact endpoint
+submitContactMessage: (data) => contentAPI.post('/content/contact/', data),
 };
-
-// Also export as contentAPI for backward compatibility
-
 
 // Default export
 export default contentService;

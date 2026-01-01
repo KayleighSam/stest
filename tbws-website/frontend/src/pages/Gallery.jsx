@@ -6,7 +6,7 @@ import {
   ChevronLeft, ChevronRight, Download, Share2, Grid, 
   Layers, Search, Camera
 } from 'lucide-react';
-import { galleryAPI } from '../api/gallery';
+import galleryService from '../api/gallery';
 import { getImageUrl, formatDate } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -24,18 +24,45 @@ const Gallery = () => {
   // Fetch albums
   const { data: albumsData, isLoading: albumsLoading, error: albumsError } = useQuery({
     queryKey: ['gallery-albums'],
-    queryFn: () => galleryAPI.getAlbums(),
+    queryFn: async () => {
+      try {
+        const response = await galleryService.getAlbums();
+        console.log('✅ Public Albums Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ Albums Error:', error);
+        throw error;
+      }
+    },
   });
 
   // Fetch images
   const { data: imagesData, isLoading: imagesLoading, error: imagesError } = useQuery({
     queryKey: ['gallery-images', selectedAlbum],
-    queryFn: () => galleryAPI.getImages({ album: selectedAlbum }),
+    queryFn: async () => {
+      try {
+        const params = selectedAlbum ? { album: selectedAlbum } : {};
+        const response = await galleryService.getImages(params);
+        console.log('✅ Public Images Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ Images Error:', error);
+        throw error;
+      }
+    },
   });
 
-  // Extract data
-  const albums = albumsData?.results || albumsData?.data || albumsData || [];
-  const allImages = imagesData?.results || imagesData?.data || imagesData || [];
+  // Extract data - handle different response formats
+  const albums = Array.isArray(albumsData) 
+    ? albumsData 
+    : albumsData?.results || albumsData?.data || [];
+  
+  const allImages = Array.isArray(imagesData) 
+    ? imagesData 
+    : imagesData?.results || imagesData?.data || [];
+
+  console.log('📊 Processed Albums:', albums.length);
+  console.log('📊 Processed Images:', allImages.length);
 
   // Filter images by search
   const images = allImages.filter(img => 
@@ -242,6 +269,7 @@ const Gallery = () => {
                         <img
                           src={getImageUrl(album.cover_image) || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800'}
                           alt={album.title}
+                          loading="lazy"
                         />
                         <div className="album-overlay-premium">
                           <div className="album-count-premium">
@@ -300,7 +328,7 @@ const Gallery = () => {
                     <ImageIcon size={64} />
                   </div>
                   <h3>No images found</h3>
-                  <p>Try adjusting your search</p>
+                  <p>{searchQuery ? 'Try adjusting your search' : 'Images will appear here'}</p>
                 </div>
               ) : (
                 <div className={`images-grid-premium ${viewMode === 'masonry' ? 'masonry-view' : 'grid-view'}`}>
@@ -371,6 +399,7 @@ const Gallery = () => {
                     navigateImage('prev');
                   }}
                   className="modal-nav-premium modal-nav-prev"
+                  aria-label="Previous image"
                 >
                   <ChevronLeft size={32} />
                 </button>
@@ -381,6 +410,7 @@ const Gallery = () => {
                     navigateImage('next');
                   }}
                   className="modal-nav-premium modal-nav-next"
+                  aria-label="Next image"
                 >
                   <ChevronRight size={32} />
                 </button>
@@ -397,13 +427,13 @@ const Gallery = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
-              <button onClick={closeModal} className="modal-close-premium">
+              <button onClick={closeModal} className="modal-close-premium" aria-label="Close">
                 <X size={24} />
               </button>
 
               {/* Action Buttons */}
               <div className="modal-actions-premium">
-                <button onClick={handleShare} className="modal-action-btn-premium">
+                <button onClick={handleShare} className="modal-action-btn-premium" aria-label="Share">
                   <Share2 size={18} />
                 </button>
                 <a 
@@ -411,6 +441,7 @@ const Gallery = () => {
                   download
                   className="modal-action-btn-premium"
                   onClick={(e) => e.stopPropagation()}
+                  aria-label="Download"
                 >
                   <Download size={18} />
                 </a>

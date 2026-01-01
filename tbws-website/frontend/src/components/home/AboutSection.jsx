@@ -3,26 +3,63 @@ import { Link } from 'react-router-dom';
 import { Award, Users, Target, Heart, ArrowRight, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { pagesAPI } from '../../api/pages';
+import pagesService from '../../api/pages';
 import { getImageUrl } from '../../utils/formatters';
 import './AboutSection.css';
 
 const AboutSection = () => {
+  // ✅ FIXED - Fetch site settings correctly
   const { data: settingsData } = useQuery({
-    queryKey: ['site-settings'],
-    queryFn: () => pagesAPI.getSiteSettings(),
+    queryKey: ['public-site-settings'],
+    queryFn: async () => {
+      try {
+        console.log('📤 AboutSection: Fetching site settings...');
+        const response = await pagesService.getCurrentSettings();
+        console.log('✅ AboutSection: Settings Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ AboutSection: Settings Error:', error);
+        return null;
+      }
+    },
+    staleTime: 1000 * 60 * 30, // Cache for 30 minutes
   });
 
-  const settings = settingsData?.data || settingsData;
+  // ✅ FIXED - Fetch core values
+  const { data: coreValuesData } = useQuery({
+    queryKey: ['public-core-values'],
+    queryFn: async () => {
+      try {
+        console.log('📤 AboutSection: Fetching core values...');
+        const response = await pagesService.getCoreValues();
+        console.log('✅ AboutSection: Core Values Response:', response.data);
+        
+        // Handle paginated or array response
+        if (response.data.results && Array.isArray(response.data.results)) {
+          return response.data.results;
+        } else if (Array.isArray(response.data)) {
+          return response.data;
+        }
+        return [];
+      } catch (error) {
+        console.error('❌ AboutSection: Core Values Error:', error);
+        return [];
+      }
+    },
+    staleTime: 1000 * 60 * 30,
+  });
+
+  const settings = settingsData;
+  const coreValues = coreValuesData || [];
 
   const iconMap = {
     award: Award,
     users: Users,
     target: Target,
     heart: Heart,
+    sparkles: Heart,
+    trending: Target,
   };
-
-  const coreValues = settings?.core_values || [];
 
   const highlights = [
     'Professional coaching staff',

@@ -31,12 +31,16 @@ class TagSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
     replies = serializers.SerializerMethodField()
+    post_title = serializers.CharField(source='post.title', read_only=True)
+    post_slug = serializers.CharField(source='post.slug', read_only=True)
     
     class Meta:
         model = Comment
         fields = [
             'id',
             'post',
+            'post_title',
+            'post_slug',
             'author',
             'author_name',
             'guest_name',
@@ -67,6 +71,8 @@ class PostListSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
     reading_time = serializers.ReadOnlyField()
     is_upcoming_event = serializers.ReadOnlyField()
+    comment_count = serializers.SerializerMethodField()
+    approved_comment_count = serializers.SerializerMethodField()
     
     class Meta:
         model = Post
@@ -82,15 +88,26 @@ class PostListSerializer(serializers.ModelSerializer):
             'author',
             'author_name',
             'published_at',
+            'created_at',
             'event_date',
             'event_location',
             'is_featured',
             'is_pinned',
+            'status',
             'views',
             'reading_time',
             'is_upcoming_event',
-            'created_at'
+            'comment_count',
+            'approved_comment_count',
         ]
+    
+    def get_comment_count(self, obj):
+        """Total comments (approved + pending)"""
+        return obj.comments.count()
+    
+    def get_approved_comment_count(self, obj):
+        """Only approved comments"""
+        return obj.comments.filter(is_approved=True).count()
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
@@ -101,6 +118,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     reading_time = serializers.ReadOnlyField()
     is_upcoming_event = serializers.ReadOnlyField()
+    comment_count = serializers.SerializerMethodField()
+    approved_comment_count = serializers.SerializerMethodField()
     
     class Meta:
         model = Post
@@ -127,6 +146,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'is_pinned',
             'allow_comments',
             'comments',
+            'comment_count',
+            'approved_comment_count',
             'meta_description',
             'meta_keywords',
             'views',
@@ -136,6 +157,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'updated_at'
         ]
         read_only_fields = ['author', 'views', 'created_at', 'updated_at']
+    
+    def get_comment_count(self, obj):
+        """Total comments (approved + pending)"""
+        return obj.comments.count()
+    
+    def get_approved_comment_count(self, obj):
+        """Only approved comments"""
+        return obj.comments.filter(is_approved=True).count()
 
 
 class PostCreateUpdateSerializer(serializers.ModelSerializer):
@@ -175,51 +204,6 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class ContactMessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContactMessage
-        fields = [
-            'id',
-            'name',
-            'email',
-            'phone',
-            'inquiry_type',
-            'subject',
-            'message',
-            'is_read',
-            'is_replied',
-            'created_at'
-        ]
-        read_only_fields = ['is_read', 'is_replied', 'created_at']
-    
-    def create(self, validated_data):
-        # Capture IP and User Agent from request
-        request = self.context.get('request')
-        if request:
-            validated_data['ip_address'] = self.get_client_ip(request)
-            validated_data['user_agent'] = request.META.get('HTTP_USER_AGENT', '')
-        return super().create(validated_data)
-    
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
-
-class NewsletterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Newsletter
-        fields = ['id', 'email', 'name', 'subscribed_at']
-        read_only_fields = ['subscribed_at']
-    
-    def validate_email(self, value):
-        # Check if email already exists and is active
-        if Newsletter.objects.filter(email=value, is_active=True).exists():
-            raise serializers.ValidationError("This email is already subscribed.")
-        return value
-class ContactMessageSerializer(serializers.ModelSerializer):
     replied_by_name = serializers.CharField(source='replied_by.get_full_name', read_only=True)
     
     class Meta:
@@ -241,3 +225,32 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             'created_at'
         ]
         read_only_fields = ['is_read', 'is_replied', 'replied_at', 'replied_by', 'created_at']
+    
+    def create(self, validated_data):
+        # Capture IP and User Agent from request
+        request = self.context.get('request')
+        if request:
+            validated_data['ip_address'] = self.get_client_ip(request)
+            validated_data['user_agent'] = request.META.get('HTTP_USER_AGENT', '')
+        return super().create(validated_data)
+    
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+
+class NewsletterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Newsletter
+        fields = ['id', 'email', 'name', 'is_active', 'subscribed_at', 'unsubscribed_at']
+        read_only_fields = ['subscribed_at', 'unsubscribed_at']
+    
+    def validate_email(self, value):
+        # Check if email already exists and is active
+        if Newsletter.objects.filter(email=value, is_active=True).exists():
+            raise serializers.ValidationError("This email is already subscribed.")
+        return value

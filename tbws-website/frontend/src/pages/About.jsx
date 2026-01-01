@@ -6,7 +6,7 @@ import {
   CheckCircle, X, ArrowRight, Mail, Phone, Shield,
   Linkedin, Twitter, Facebook, Zap, Trophy, Star
 } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import { getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -16,30 +16,94 @@ const About = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [activeValue, setActiveValue] = useState(0);
 
+  // Fetch site settings - ✅ FIXED
   const { data: settingsData, isLoading: settingsLoading, error: settingsError } = useQuery({
-    queryKey: ['site-settings'],
-    queryFn: () => pagesAPI.getSiteSettings(),
+    queryKey: ['public-site-settings'],
+    queryFn: async () => {
+      try {
+        console.log('📤 About: Fetching site settings...');
+        // ✅ CHANGED FROM getSiteSettings() TO getCurrentSettings()
+        const response = await pagesService.getCurrentSettings();
+        console.log('✅ About: Settings Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ About: Settings Error:', error);
+        throw error;
+      }
+    },
   });
 
+  // Fetch about page
   const { data: pageData, isLoading: pageLoading } = useQuery({
     queryKey: ['page', 'about'],
-    queryFn: () => pagesAPI.getPage('about'),
+    queryFn: async () => {
+      try {
+        console.log('📤 About: Fetching about page...');
+        const response = await pagesService.getPage('about');
+        console.log('✅ About: Page Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ About: Page Error:', error);
+        return null;
+      }
+    },
   });
 
+  // Fetch core values
   const { data: coreValuesData, isLoading: valuesLoading } = useQuery({
-    queryKey: ['core-values'],
-    queryFn: () => pagesAPI.getCoreValues(),
+    queryKey: ['public-core-values'],
+    queryFn: async () => {
+      try {
+        console.log('📤 About: Fetching core values...');
+        const response = await pagesService.getCoreValues();
+        console.log('✅ About: Core Values Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ About: Core Values Error:', error);
+        throw error;
+      }
+    },
   });
 
+  // Fetch team members
   const { data: teamData, isLoading: teamLoading } = useQuery({
-    queryKey: ['team-members'],
-    queryFn: () => pagesAPI.getTeamMembers(),
+    queryKey: ['public-team-members'],
+    queryFn: async () => {
+      try {
+        console.log('📤 About: Fetching team members...');
+        const response = await pagesService.getTeamMembers();
+        console.log('✅ About: Team Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ About: Team Error:', error);
+        throw error;
+      }
+    },
   });
 
-  const settings = settingsData?.data || settingsData;
-  const page = pageData?.data || pageData;
-  const coreValues = coreValuesData?.results || coreValuesData?.data || coreValuesData || [];
-  const teamMembers = teamData?.results || teamData?.data || teamData || [];
+  // Extract data from responses
+  const settings = Array.isArray(settingsData) 
+    ? settingsData[0] 
+    : settingsData;
+
+  const page = Array.isArray(pageData) 
+    ? pageData[0] 
+    : pageData;
+
+  const coreValues = Array.isArray(coreValuesData) 
+    ? coreValuesData 
+    : coreValuesData?.results || [];
+
+  const teamMembers = Array.isArray(teamData) 
+    ? teamData 
+    : teamData?.results || [];
+
+  console.log('📊 About Page Data:', { 
+    settings, 
+    page, 
+    coreValuesCount: coreValues.length, 
+    teamCount: teamMembers.length 
+  });
 
   const iconMap = {
     award: Award,
@@ -67,8 +131,13 @@ const About = () => {
     document.body.style.overflow = 'auto';
   };
 
-  if (settingsLoading || pageLoading || valuesLoading || teamLoading) return <Loading fullScreen />;
-  if (settingsError) return <ErrorMessage message="Failed to load settings" />;
+  if (settingsLoading || pageLoading || valuesLoading || teamLoading) {
+    return <Loading fullScreen />;
+  }
+
+  if (settingsError) {
+    return <ErrorMessage message="Failed to load page data" />;
+  }
 
   return (
     <div className="about-page-cool">
@@ -100,7 +169,7 @@ const About = () => {
             </h1>
             
             <p className="about-hero-tagline">
-              Building Kenya's Premier Basketball Community
+              {settings?.tagline || 'Building Kenya\'s Premier Basketball Community'}
             </p>
 
             <div className="hero-cta-group">
@@ -157,7 +226,7 @@ const About = () => {
             >
               <div className="story-image-container">
                 <img
-                  src={getImageUrl(page?.featured_image || page?.hero_image) || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200'}
+                  src={getImageUrl(page?.featured_image || page?.hero_image || settings?.about_image) || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200'}
                   alt="TBWS Story"
                 />
                 <div className="image-overlay-pattern"></div>
@@ -198,19 +267,25 @@ const About = () => {
                 </div>
 
                 <h2 className="story-heading-epic">
-                  BUILDING BASKETBALL
+                  {settings?.about_title || 'BUILDING BASKETBALL'}
                   <span className="heading-highlight">EXCELLENCE</span>
                 </h2>
 
                 <div className="story-text-epic">
-                  <p>
-                    For over two decades, TBWS has been the heartbeat of basketball in Kenya. 
-                    We're more than just a league – we're a movement, a family, and a legacy.
-                  </p>
-                  <p>
-                    From grassroots programs to championship tournaments, we've created a 
-                    platform where talent thrives, champions are forged, and dreams become reality.
-                  </p>
+                  {settings?.about_content ? (
+                    <div dangerouslySetInnerHTML={{ __html: settings.about_content }} />
+                  ) : (
+                    <>
+                      <p>
+                        For over two decades, TBWS has been the heartbeat of basketball in Kenya. 
+                        We're more than just a league – we're a movement, a family, and a legacy.
+                      </p>
+                      <p>
+                        From grassroots programs to championship tournaments, we've created a 
+                        platform where talent thrives, champions are forged, and dreams become reality.
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 <div className="story-features">
@@ -278,7 +353,7 @@ const About = () => {
                     <div className="mv-icon-epic">
                       <Target size={48} />
                     </div>
-                    <h3 className="mv-card-title">MISSION</h3>
+                    <h3 className="mv-card-title">{settings?.mission_title || 'MISSION'}</h3>
                     <div 
                       className="mv-card-text"
                       dangerouslySetInnerHTML={{ __html: settings.mission_content }}
@@ -301,7 +376,7 @@ const About = () => {
                     <div className="mv-icon-epic">
                       <Sparkles size={48} />
                     </div>
-                    <h3 className="mv-card-title">VISION</h3>
+                    <h3 className="mv-card-title">{settings?.vision_title || 'VISION'}</h3>
                     <div 
                       className="mv-card-text"
                       dangerouslySetInnerHTML={{ __html: settings.vision_content }}
@@ -407,7 +482,7 @@ const About = () => {
                 >
                   <div className="team-card-image-epic">
                     <img
-                      src={getImageUrl(member.photo) || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=400&background=ff6b35&color=fff&bold=true`}
+                      src={getImageUrl(member.photo) || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=400&background=1e3c72&color=fff&bold=true`}
                       alt={member.name}
                     />
                     <div className="team-card-gradient"></div>
@@ -457,7 +532,7 @@ const About = () => {
               <div className="modal-layout-epic">
                 <div className="modal-left-epic">
                   <img
-                    src={getImageUrl(selectedMember.photo) || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedMember.name)}&size=600&background=ff6b35&color=fff&bold=true`}
+                    src={getImageUrl(selectedMember.photo) || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedMember.name)}&size=600&background=1e3c72&color=fff&bold=true`}
                     alt={selectedMember.name}
                   />
                 </div>

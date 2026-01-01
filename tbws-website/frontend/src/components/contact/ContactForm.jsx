@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Send } from 'lucide-react';
-import { contentAPI } from '../../api/content';
+import { contentService } from '../../api/content';
 import toast from 'react-hot-toast';
-import './ContactForm.css';
+import './ContactForm.css';     
 
 const schema = yup.object({
   name: yup.string().required('Name is required'),
@@ -31,7 +31,7 @@ const ContactForm = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      await contentAPI.submitContact(data);
+      await contentService.submitContact(data);
       toast.success('Message sent successfully! We\'ll get back to you soon.');
       reset();
     } catch (error) {

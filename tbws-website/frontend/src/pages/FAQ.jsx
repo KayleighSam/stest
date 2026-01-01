@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle, Search } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
 import './FAQ.css';
@@ -13,7 +13,17 @@ const FAQ = () => {
 
   const { data: faqData, isLoading, error } = useQuery({
     queryKey: ['faq'],
-    queryFn: pagesAPI.getFAQ,
+    queryFn: async () => {
+      try {
+        console.log('📤 FAQ: Fetching FAQs...');
+        const response = await pagesService.getFAQs();
+        console.log('✅ FAQ: Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ FAQ: Error:', error);
+        throw error;
+      }
+    },
   });
 
   if (isLoading) return <Loading fullScreen />;
@@ -22,12 +32,15 @@ const FAQ = () => {
   /**
    * Normalize API response
    * Supports:
-   * - { data: { results: [] } }
-   * - { data: [] }
+   * - { results: [] }
    * - []
    */
-  const rawData = faqData?.data || faqData || [];
-  const faqs = rawData?.results || rawData?.data || rawData || [];
+  const rawData = faqData;
+  const faqs = Array.isArray(rawData) 
+    ? rawData 
+    : rawData?.results || rawData?.data || [];
+
+  console.log('📊 FAQ Data:', faqs);
 
   // Filter FAQs safely
   const filteredFAQs = faqs.filter((faq) => {
@@ -88,7 +101,7 @@ const FAQ = () => {
             <div className="no-faqs">
               <HelpCircle size={64} />
               <h3>No questions found</h3>
-              <p>Try a different search term</p>
+              <p>Try a different search term or check back later</p>
             </div>
           ) : (
             <div className="faq-list">
@@ -151,7 +164,7 @@ const FAQ = () => {
           >
             <h3>Still have questions?</h3>
             <p>
-              Can’t find the answer you’re looking for? Please reach out to our
+              Can't find the answer you're looking for? Please reach out to our
               friendly team.
             </p>
             <a href="/contact" className="btn btn-primary btn-lg">

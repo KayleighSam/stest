@@ -5,7 +5,7 @@ import {
   MapPin, Phone, Mail, Globe, Users, Search, 
   Filter, X, Star, Navigation, ChevronRight 
 } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import { getImageUrl } from '../utils/formatters';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
@@ -18,11 +18,25 @@ const Venues = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => pagesAPI.getVenues(),
+    queryFn: async () => {
+      try {
+        console.log('📤 Venues: Fetching venues...');
+        const response = await pagesService.getVenues();
+        console.log('✅ Venues: Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ Venues: Error:', error);
+        throw error;
+      }
+    },
   });
 
-  const rawData = data?.data || data || [];
-  const allVenues = rawData?.results || rawData?.data || rawData || [];
+  const rawData = data;
+  const allVenues = Array.isArray(rawData) 
+    ? rawData 
+    : rawData?.results || rawData?.data || [];
+
+  console.log('📊 Venues Data:', allVenues);
 
   const courtTypes = useMemo(() => {
     const types = new Set(allVenues.map(v => v.court_type).filter(Boolean));
@@ -33,7 +47,7 @@ const Venues = () => {
     return allVenues.filter(venue => {
       const matchesSearch = searchQuery === '' || 
         venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        venue.address.toLowerCase().includes(searchQuery.toLowerCase());
+        (venue.address && venue.address.toLowerCase().includes(searchQuery.toLowerCase()));
       
       const matchesType = selectedType === 'all' || venue.court_type === selectedType;
       

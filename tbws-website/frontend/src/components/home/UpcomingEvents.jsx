@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, ArrowRight, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { contentAPI } from '../../api/content';
+import { contentService } from '../../api/content';
 import { formatDateTime, getImageUrl } from '../../utils/formatters';
 import Loading from '../common/Loading';
 import './UpcomingEvents.css';
@@ -11,7 +11,7 @@ import './UpcomingEvents.css';
 const UpcomingEvents = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['upcoming-events'],
-    queryFn: () => contentAPI.getUpcomingEvents(),
+    queryFn: () => contentService.getUpcomingEvents(),
   });
 
   if (isLoading) return <Loading />;

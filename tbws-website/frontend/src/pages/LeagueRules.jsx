@@ -10,7 +10,7 @@ import {
   FileText,
   Scale
 } from 'lucide-react';
-import { pagesAPI } from '../api/pages';
+import pagesService from '../api/pages';
 import Loading from '../components/common/Loading';
 import ErrorMessage from '../components/common/ErrorMessage';
 import './LeagueRules.css';
@@ -20,12 +20,39 @@ const LeagueRules = () => {
   const [expandedRule, setExpandedRule] = useState(null);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['league-rules-by-category'],
-    queryFn: () => pagesAPI.getLeagueRulesByCategory(),
+    queryKey: ['league-rules'],
+    queryFn: async () => {
+      try {
+        console.log('📤 LeagueRules: Fetching rules...');
+        const response = await pagesService.getLeagueRules();
+        console.log('✅ LeagueRules: Response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('❌ LeagueRules: Error:', error);
+        throw error;
+      }
+    },
   });
 
-  const rulesByCategory = data?.data || data || {};
+  // Extract rules data
+  const rawRules = data;
+  const allRules = Array.isArray(rawRules) 
+    ? rawRules 
+    : rawRules?.results || rawRules?.data || [];
+
+  // Group rules by category
+  const rulesByCategory = allRules.reduce((acc, rule) => {
+    const category = rule.category || 'Other';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(rule);
+    return acc;
+  }, {});
+
   const categories = Object.keys(rulesByCategory);
+
+  console.log('📊 League Rules Data:', { allRules, rulesByCategory, categories });
 
   const categoryConfig = {
     'Game Rules': { icon: BookOpen },
@@ -41,7 +68,7 @@ const LeagueRules = () => {
     if (categories.length > 0 && !activeCategory) {
       setActiveCategory(categories[0]);
     }
-  }, [categories, activeCategory]);
+  }, [categories.length, activeCategory]);
 
   // ✅ SAFE EARLY RETURNS AFTER HOOKS
   if (isLoading) return <Loading fullScreen />;
