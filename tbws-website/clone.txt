@@ -1,0 +1,22 @@
+import React from 'react';
+import Hero from '../components/home/Hero';
+// Import other sections when you create them
+// import AboutSection from '../components/home/AboutSection';
+// import FeaturedPosts from '../components/home/FeaturedPosts';
+// import UpcomingEvents from '../components/home/UpcomingEvents';
+// import SponsorsSection from '../components/home/SponsorsSection';
+
+const Home = () => {
+  return (
+    <div className="home-page">
+      <Hero />
+      {/* Uncomment as you create each section */}
+      {/* <AboutSection /> */}
+      {/* <FeaturedPosts /> */}
+      {/* <UpcomingEvents /> */}
+      {/* <SponsorsSection /> */}
+    </div>
+  );
+};
+
+export default Home;

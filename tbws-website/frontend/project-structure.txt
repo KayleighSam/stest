@@ -1,0 +1,162 @@
+.
+├── PHASE1.txt
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── project-structure.txt
+├── public
+│   └── vite.svg
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── api
+│   │   ├── auth.jsx
+│   │   ├── axios.jsx
+│   │   ├── content.js
+│   │   ├── content.jsx
+│   │   ├── gallery.js
+│   │   ├── gallery.jsx
+│   │   ├── pages.js
+│   │   ├── pages.jsx
+│   │   └── users.js
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── admin
+│   │   │   ├── AdminHeader.css
+│   │   │   ├── AdminHeader.jsx
+│   │   │   ├── AdminLayout.jsx
+│   │   │   ├── AdminSidebar.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── StatCard.css
+│   │   │   ├── StatCard.jsx
+│   │   │   └── admin-layout.css
+│   │   ├── blog
+│   │   │   ├── CommentSection.css
+│   │   │   ├── CommentSection.jsx
+│   │   │   ├── PostCard.css
+│   │   │   ├── PostCard.jsx
+│   │   │   ├── PostDetail.jsx
+│   │   │   ├── PostFilters.css
+│   │   │   └── PostFilters.jsx
+│   │   ├── common
+│   │   │   ├── ErrorMessage.css
+│   │   │   ├── ErrorMessage.jsx
+│   │   │   ├── Footer.css
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Loading.css
+│   │   │   ├── Loading.jsx
+│   │   │   ├── Navbar.css
+│   │   │   └── Navbar.jsx
+│   │   ├── contact
+│   │   │   ├── ContactForm.css
+│   │   │   └── ContactForm.jsx
+│   │   └── home
+│   │       ├── AboutSection.css
+│   │       ├── AboutSection.jsx
+│   │       ├── FeaturedPosts.css
+│   │       ├── FeaturedPosts.jsx
+│   │       ├── Footer.css
+│   │       ├── Hero.css
+│   │       ├── Hero.jsx
+│   │       ├── SponsorsSection.css
+│   │       ├── SponsorsSection.jsx
+│   │       ├── UpcomingEvents.css
+│   │       └── UpcomingEvents.jsx
+│   ├── context
+│   │   ├── AdminAuthContext.jsx
+│   │   ├── ApiContext.jsx
+│   │   └── AppContext.jsx
+│   ├── index.css
+│   ├── main.jsx
+│   ├── pages
+│   │   ├── About.css
+│   │   ├── About.jsx
+│   │   ├── Blog.css
+│   │   ├── Blog.jsx
+│   │   ├── Contact.css
+│   │   ├── Contact.jsx
+│   │   ├── DraftInfo.css
+│   │   ├── DraftInfo.jsx
+│   │   ├── Events.css
+│   │   ├── Events.jsx
+│   │   ├── FAQ.css
+│   │   ├── FAQ.jsx
+│   │   ├── Gallery.css
+│   │   ├── Gallery.jsx
+│   │   ├── History.css
+│   │   ├── History.jsx
+│   │   ├── Home.jsx
+│   │   ├── LeagueRules.css
+│   │   ├── LeagueRules.jsx
+│   │   ├── ManagerInfo.css
+│   │   ├── ManagerInfo.jsx
+│   │   ├── NotFound.css
+│   │   ├── NotFound.jsx
+│   │   ├── PostDetailPage.css
+│   │   ├── PostDetailPage.jsx
+│   │   ├── Venues.css
+│   │   ├── Venues.jsx
+│   │   ├── about.txt
+│   │   └── admin
+│   │       ├── AdminEvents.css
+│   │       ├── AdminEvents.jsx
+│   │       ├── Categories.css
+│   │       ├── Categories.jsx
+│   │       ├── Comments.css
+│   │       ├── Comments.jsx
+│   │       ├── ContactMessages.css
+│   │       ├── ContactMessages.jsx
+│   │       ├── Dashboard.css
+│   │       ├── Dashboard.jsx
+│   │       ├── Gallery.css
+│   │       ├── Gallery.jsx
+│   │       ├── Login.css
+│   │       ├── Login.jsx
+│   │       ├── Newsletter.css
+│   │       ├── Newsletter.jsx
+│   │       ├── Players.css
+│   │       ├── Players.jsx
+│   │       ├── PostEditor.css
+│   │       ├── PostEditor.jsx
+│   │       ├── Posts.css
+│   │       ├── Posts.jsx
+│   │       ├── Settings
+│   │       │   ├── CoreValues.css
+│   │       │   ├── CoreValues.jsx
+│   │       │   ├── DraftInfo.css
+│   │       │   ├── DraftInfo.jsx
+│   │       │   ├── FAQs.css
+│   │       │   ├── FAQs.jsx
+│   │       │   ├── History.jsx
+│   │       │   ├── HistoryTimeline.css
+│   │       │   ├── HistoryTimeline.jsx
+│   │       │   ├── LeagueRules.css
+│   │       │   ├── LeagueRules.jsx
+│   │       │   ├── ManagerInfo.css
+│   │       │   ├── ManagerInfo.jsx
+│   │       │   ├── Managers.jsx
+│   │       │   ├── Pages.css
+│   │       │   ├── Pages.jsx
+│   │       │   ├── Settings.css
+│   │       │   ├── Settings.jsx
+│   │       │   ├── SiteSettings.jsx
+│   │       │   ├── Sponsors.css
+│   │       │   ├── Sponsors.jsx
+│   │       │   ├── Team.css
+│   │       │   ├── Team.jsx
+│   │       │   ├── Venues.css
+│   │       │   ├── Venues.jsx
+│   │       │   └── settings2.css
+│   │       ├── Settings.css
+│   │       └── admin-layout.css
+│   ├── styles
+│   │   └── globals.css
+│   └── utils
+│       ├── adminAuth.js
+│       └── formatters.js
+└── vite.config.js
+
+17 directories, 143 files
